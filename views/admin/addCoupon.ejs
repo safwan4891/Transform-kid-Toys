@@ -1,0 +1,306 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
+
+<head>
+    <meta charset="utf-8">
+    <title>Evara Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/admin-assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Bootstrap Datepicker CSS -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+</head>
+
+
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="index.html" class="brand-wrap">
+                <img src="/assets/imgs/theme/logo.jpg" class="logo" alt="Evara Dashboard">
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/home"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="page-orders-1.html"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/userlist"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Users</span>
+                    </a>
+
+                </li>
+                <li class="menu-item active">
+                    <a class="menu-link" href="/admin/addCoupon"> <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Add Coupon</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Category</span>
+                    </a>
+
+            </ul>
+            <br>
+            <br>
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
+                        class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+
+                    <a class="dropdown-item text-danger" href="/admin/logout"><i
+                            class="material-icons md-exit_to_app"></i>Logout</a>
+            </div>
+            </li>
+            </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="row">
+                <div class="col-6">
+                    <div class="content-header">
+                        <h2 class="content-title">Add Coupon</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <form action="/admin/Coupon" method="POST" onsubmit="return validateCouponForm()">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="mb-4">
+                                            <div class="form-group">
+                                                <label for="productName" class="form-label">Coupon Name</label>
+                                                <input type="text" class="form-control" id="couponname"
+                                                    name="couponname" required>
+                                                <span id="couponNameError" class="error-message"
+                                                    style="color: red"></span>
+                                            </div>
+
+                                            <div class="container mb-4">
+                                                <div class="form-group">
+                                                    <label for="expireDate" class="form-label">Expire On
+                                                        (dd-mm-yy)</label>
+                                                    <input type="text" class="form-control datepicker" id="expiredate"
+                                                        name="expiredate" required>
+                                                    <span id="expireDateError" class="error-message"
+                                                        style="color: red"></span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="mb-4">
+                                            <div class="mb-4">
+
+                                                <div class="form-group">
+                                                    <label for="productName" class="form-label">Offer Price</label>
+                                                    <input type="text" class="form-control" id="offerprice"
+                                                        name="offerprice" required>
+                                                    <span id="offerPriceError" class="error-message"
+                                                        style="color: red"></span>
+                                                </div>
+                                            </div> <!-- col.// -->
+                                        </div> <!-- row.// -->
+                                        <hr class="mb-4 mt-0">
+
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Minimum Price</label>
+                                        <input name="minimumprice" class="form-control border" id="minimumprice"
+                                            required>
+                                        <span id="minimumPriceError" class="error-message" style="color: red"></span>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Coupon Code</label>
+                                        <input name="code" class="form-control border" id="code" required>
+                                        <span id="codeError" class="error-message" style="color: red"></span>
+
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="mb-4">
+
+                                            <input type="submit" value="Add Coupon" onclick="validateCouponForm() "
+                                                style="background-color: #4CAF50; color: white;"
+                                                class="add-coupon-button">
+                                        </div>
+                                    </div> <!-- col.// -->
+                                </div> <!-- .row end// -->
+                            </div>
+                        </form>
+
+
+                    </div>
+
+                </div>
+            </div>
+            </div>
+        </section> <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+
+            </div>
+            </div>
+        </footer>
+    </main>
+    <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/admin-assets/js/vendors/select2.min.js"></script>
+    <script src="/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- Main Script -->
+    <!-- <script src="/admin-assets/js/main.js" type="text/javascript"></script> -->
+
+    <!--product validation form -->
+
+    <script>
+        // Initialize datepicker
+        $('.datepicker').datepicker({
+            format: 'dd-mm-yyyy', // Date format: dd-mm-yyyy
+            autoclose: true // Close the datepicker when a date is selected
+        });
+
+        function validateCouponForm() {
+
+            console.log("worked")
+            const couponName = document.getElementById('couponname').value.trim();
+            const expireDate = document.getElementById('expiredate').value.trim();
+            const offerPrice = document.getElementById('offerprice').value.trim();
+            const minimumPrice = document.getElementById('minimumprice').value.trim();
+            const code = document.getElementById('code').value.trim();
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0); // Set hours to 0 for comparison with selected date
+            const minimumPriceValue = parseFloat(minimumPrice);
+            // Parse the selected expire date
+            const [day, month, year] = expireDate.split('-');
+            const selectedDate = new Date(`${year}-${month}-${day}`);
+            selectedDate.setHours(0, 0, 0, 0); // Set hours to 0 for comparison
+
+
+            // Reset error messages
+            document.getElementById('couponNameError').innerText = '';
+            document.getElementById('expireDateError').innerText = '';
+            document.getElementById('offerPriceError').innerText = '';
+            document.getElementById('minimumPriceError').innerText = '';
+            document.getElementById('codeError').innerText = '';
+
+            let isValid = true;
+
+            // Validate coupon name
+            if (!couponName) {
+                document.getElementById('couponNameError').innerText = 'Coupon Name is required';
+                isValid = false;
+            }
+
+            // Validate expire date format
+            const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
+            if (!dateRegex.test(expireDate)) {
+                document.getElementById('expireDateError').innerText = 'Invalid date format (dd-mm-yyyy)';
+                isValid = false;
+            }
+
+            // Check if the selected date is a future date
+            if (selectedDate <= currentDate) {
+                document.getElementById('expireDateError').innerText = 'Expire date must be a future date';
+                isValid = false;
+            }
+
+            // Validate offer price
+            if (!offerPrice) {
+                document.getElementById('offerPriceError').innerText = 'Offer Price is required';
+                isValid = false;
+            } else if (parseInt(offerPrice) >= parseInt(minimumPrice)) {
+                document.getElementById('offerPriceError').innerText = 'Offer Price must be less than Minimum Price';
+                isValid = false;
+            }
+
+            // Validate minimum price
+            if (!minimumPrice) {
+                document.getElementById('minimumPriceError').innerText = 'Minimum Price is required';
+                isValid = false;
+            }
+            if (isNaN(minimumPriceValue) || minimumPriceValue < 1000) {
+                document.getElementById('minimumPriceError').innerText = 'Minimum Price must be greater than or equal to 1000';
+                isValid = false;
+            }
+
+            // Validate coupon code
+            if (!code) {
+                document.getElementById('codeError').innerText = 'Coupon Code is required';
+                isValid = false;
+            }
+
+
+            if (isValid) {
+
+            }
+            console.log(isValid)
+            return isValid;
+        }
+
+
+
+
+    </script>
+
+</body>
+
+</html>

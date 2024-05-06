@@ -1,0 +1,358 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
+
+<head>
+    <meta charset="utf-8">
+    <title>Evara Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/admin-assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Bootstrap Datepicker CSS -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+</head>
+
+
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="index.html" class="brand-wrap">
+                <img src="/assets/imgs/theme/logo.jpg" class="logo" alt="Evara Dashboard">
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/home"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="page-orders-1.html"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/userlist"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Users</span>
+                    </a>
+
+                </li>
+
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Category</span>
+                    </a>
+
+            </ul>
+            <br>
+            <br>
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
+                        class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+
+                    <a class="dropdown-item text-danger" href="/admin/logout"><i
+                            class="material-icons md-exit_to_app"></i>Logout</a>
+            </div>
+            </li>
+            </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="row">
+                <div class="col-6">
+                    <div class="content-header">
+                        <h2 class="content-title">Add Offers</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <form action="/admin/addOffers" method="POST" onsubmit="validateOfferForm()">
+
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="mb-4">
+                                            <div class="form-group">
+                                                <label for="productName" class="form-label"> Name</label>
+                                                <input type="text" class="form-control" id="name" name="name" >
+                                                <span id="offerNameError" class="error-message"
+                                                    style="color: red"></span>
+                                            </div>
+
+                                            <div class="mb-4">
+                                                <label for="brand" class="form-label">Discount On</label>
+                                                <select class="form-select" id="discountOn" name="discountOn" onchange="handleDiscountOn()">
+                                                    <option value="">Select Offer On</option>
+                                                    <option value="category">Category</option>
+                                                    <option value="product">Products</option>
+
+                                                </select>
+                                                <span id="categoryError" class="error-message "
+                                                    style="color:red"></span>
+
+                                            </div>
+
+
+                                            <div class="container mb-4">
+                                                <div class="form-group">
+                                                    <label for="expireDate" class="form-label">Expire On
+                                                        (dd-mm-yy)</label>
+                                                    <input type="text" class="form-control datepicker" id="expireOn"
+                                                        name="expireOn" required>
+                                                </div>
+                                                <span id="expireDateError" class="error-message"
+                                                    style="color: red"></span>
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="mb-4">
+
+                                        </div> <!-- col.// -->
+                                    </div> <!-- row.// -->
+                                    <hr class="mb-4 mt-0">
+
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product" class="form-label">Product</label>
+                                    <select class="form-select" id="discountedProduct" name="discountedProduct">
+                                        <option value="">Select Product</option>
+                                        <% products.forEach(product=> { %>
+                                            <option value="<%= product._id%>">
+                                                <%= product.productName %>
+                                            </option>
+                                            <% }); %>
+
+                                    </select>
+                                    <span id="discountedProductError" class="error-message " style="color:red"></span>
+                                </div>
+
+
+                                <div class="mb-4">
+                                    <label for="category" class="form-label">Category</label>
+                                    <select class="form-select" id="discountedCategory" name="discountedCategory">
+                                        <option value="">Select Category</option>
+                                        <% category.forEach(categories=> { %>
+                                            <option value="<%= categories._id %>">
+                                                <%= categories.name %>
+                                            </option>
+                                            <% }); %>
+                                    </select>
+
+                                </div>
+
+
+                                <div class="mb-4">
+                                    <label for="brand" class="form-label">Discount Type</label>
+                                    <select class="form-select" id="discountType" name="discountType">
+                                        <option value="">Select Discount Type</option>
+                                        <option value="percentage">Percentage</option>
+                                        <option value="fixedAmount">Fixed Amount</option>
+                                    </select>
+                                    <span id="discountTypeError" class="error-message " style="color:red"></span>
+                                </div>
+
+                                <div class="mb-4">
+
+                                    <div class="form-group">
+                                        <label for="productName" class="form-label">Discount Value</label>
+                                        <input type="text" class="form-control" id="discountValue" name="discountValue">
+                                        <span id="discountValueError"  class="error-message" style="color: red"></span>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="mb-4">
+
+                                            <button type="submit" value="Add Offer"
+                                                style="background-color: #646888ad; color: white;"
+                                                class="add-offer-button">Add Offer</button>
+                                           
+                                                
+
+
+                                        </div>
+                                    </div> <!-- col.// -->
+                                </div> <!-- .row end// -->
+                            </div>
+                        </form>
+
+
+                    </div>
+
+                </div>
+            </div>
+            </div>
+        </section> <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+
+            </div>
+            </div>
+        </footer>
+    </main>
+    <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/admin-assets/js/vendors/select2.min.js"></script>
+    <script src="/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <script>
+        // Initialize datepicker
+        $('.datepicker').datepicker({
+            format: 'dd-mm-yyyy', // Date format: dd-mm-yyyy
+            autoclose: true // Close the datepicker when a date is selected
+        });
+
+        function handleDiscountOn(){
+            const discountedCategorySelect = document.getElementById('discountedCategory');
+            const discountedProductSelect = document.getElementById('discountedProduct');
+            if(event.target.value == 'product'){
+                discountedCategorySelect.disabled = true;
+                discountedProductSelect.disabled = false;
+            }else{
+                discountedProductSelect.disabled = true;
+                discountedCategorySelect.disabled = false
+            }
+
+        }
+
+        function validateOfferForm() {
+            const offerName = document.getElementById('name').value.trim();
+            const discountOn = document.getElementById('discountOn').value;
+            const category = document.getElementById('discountedCategory').value.trim();
+            const expireDate = document.getElementById('expireOn').value.trim();
+            const product = document.getElementById('discountedProduct').value.trim();
+            const discountType = document.getElementById('discountType').value;
+            const discountValue = document.getElementById('discountValue').value.trim();
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0); // Set hours to 0 for comparison with selected date
+            
+            
+            // Reset error messages
+            document.getElementById('offerNameError').innerText = '';
+            document.getElementById('categoryError').innerText = '';
+            
+            document.getElementById('expireDateError').innerText = '';
+            
+            document.getElementById('discountedProductError').textContent = '';
+            document.getElementById('discountTypeError').innerText = '';
+            document.getElementById('discountValueError').textContent = '';
+            let isValid = true;
+
+
+            // Validate expire date format
+            const dateRegex = /^\d{2}-\d{2}-\d{4}$/;
+            if (!dateRegex.test(expireDate)) {
+                document.getElementById('expireDateError').innerText = 'Invalid date format (dd-mm-yyyy)';
+                isValid= false;
+            }
+
+            // Check if the selected date is a future date
+            const [day, month, year] = expireDate.split('-');
+            const selectedDate = new Date(`${year}-${month}-${day}`);
+            selectedDate.setHours(0, 0, 0, 0); // Set hours to 0 for comparison
+            if (selectedDate <= currentDate) {
+                document.getElementById('expireDateError').innerText = 'Expire date must be a future date';
+                isValid = false;
+            }
+
+            
+
+            // Validate offer name
+            if (!offerName) {
+                
+                console.log(offerName,"name");
+                document.getElementById('offerNameError').innerText = 'Offer Name is required';
+                isValid = false;
+                event.preventDefault()
+            }
+
+            // Validate Discount On option
+            if (discountOn === '') {
+                document.getElementById('categoryError').textContent = 'Please select a valid Discount On option.';
+                isValid = false;
+            }
+
+            // Additional validation checks for product and category
+            if (discountOn === 'category' && product !== '') {
+                document.getElementById('discountedProductError').textContent = 'You can only select either a Product or a Category, not both.';
+                isValid = false;
+            } else if (discountOn === 'product' && category !== '') {
+                document.getElementById('categoryError').textContent = 'You can only select either a Product or a Category, not both.';
+                isValid = false;
+            }
+
+            // Validate discount type
+            if (discountType === '') {
+                document.getElementById('discountTypeError').textContent = 'Please select a Discount Type.';
+                isValid = false;
+            }
+
+            // Validate discount value
+            if (discountValue === '') {
+                document.getElementById('discountValueError').textContent = 'Discount Value is required.';
+                isValid = false;
+            }
+
+            if (isValid) {
+
+              }
+            console.log(isValid)
+              return isValid;
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>

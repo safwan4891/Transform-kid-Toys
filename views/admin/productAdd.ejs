@@ -1,0 +1,313 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
+<head>
+    <meta charset="utf-8">
+    <title>Evara Dashboard</title>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="">
+    <meta property="og:type" content="">
+    <meta property="og:url" content="">
+    <meta property="og:image" content="">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/admin-assets/imgs/theme/favicon.svg">
+    <!-- Template CSS -->
+    <link href="/admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <div class="screen-overlay"></div>
+    <aside class="navbar-aside" id="offcanvas_aside">
+        <div class="aside-top">
+            <a href="index.html" class="brand-wrap">
+                <img src="/assets/imgs/theme/logo.jpg" class="logo" alt="Evara Dashboard">
+            </a>
+            <div>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+            </div>
+        </div>
+        <nav>
+            <ul class="menu-aside">
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/home"> <i class="icon material-icons md-home"></i>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
+                        <span class="text">Products</span>
+                    </a>
+                   
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="page-orders-1.html"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
+                    </a>
+                    
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/userlist"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Users</span>
+                    </a>
+                
+                </li>
+                <li class="menu-item active">
+                    <a class="menu-link" href="/admin/addproducts"> <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Add product</span>
+                    </a>
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-monetization_on"></i>
+                        <span class="text">Category</span>
+                    </a>
+                   
+            </ul>
+            <br>
+            <br>
+        </nav>
+    </aside>
+    <main class="main-wrap">
+        <header class="main-header navbar">
+            <div class="col-search">
+                <form class="searchform">
+                    
+                    <datalist id="search_terms">
+                        <option value="Products">
+                        <option value="New orders">
+                        <option value="Apple iphone">
+                        <option value="Ahmed Hassan">
+                    </datalist>
+                </form>
+            </div>
+            <div class="col-nav">
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <ul class="nav">
+        
+                            <a class="dropdown-item text-danger" href="/admin/"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section class="content-main">
+            <div class="row">
+                <div class="col-6">
+                    <div class="content-header">
+                        <h2 class="content-title">Add New Product</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                       <form action="/admin/addproducts" method="POST" onsubmit="validateProductForm(event)" enctype="multipart/form-data" >                 
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>1. General info</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <div class="form-group">
+                                        <label for="productName" class="form-label">Product Name</label>
+                                        <input type="text" class="form-control" id="productName" name="productName" required>
+                                        <span id="productNameError" class="error-message "style="color:red"></span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="from-group"></div>
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea class="form-control" id="description" name="description" row="3" required></textarea>
+                                        <span id="descriptionError" class="error-message "style="color:red"></span>
+                                    </div>
+
+
+                                    <div class="mb-4">
+                                        <label for="brand" class="form-label">Brand </label>                           
+                                        <select class="form-select" id="brand" name="brand" required>
+                                            <option value="">Select Brand</option>
+                                            <option> Maisto </option>
+                                            <option> Hot WHeels </option>
+                                            <option> Bburago </option>
+                                            <option> Majorette </option>
+                                            <option>Kinsmart</option>
+                                        </select>
+                                     <span id="brandError" class="error-message "style="color:red"></span>
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>2. Price</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label">Cost in Dollar</label>
+                                        <input type="text" placeholder="$00.0" class="form-control" name="price" id="price" required>
+                                        <span id="priceError" class="error-message "style="color:red"></span>
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>3. Category</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <%for(let i=0;i<categories.length;i++){%>
+                                        <label class="mb-2 form-check form-check-inline" style="width: 45%;">
+                                            <input class="form-check-input" checked="" name="mycategory" type="radio" value="<%=categories[i]._id%>" required>
+                                            <span class="form-check-label"><%=categories[i].name%> </span>
+                                        </label>
+                                    <%}%>
+                                        
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>4. Media</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label  for="image"class="form-label">Image</label>
+                                        <input onchange="checkImageLength()" type="file" class="form-control" id="image" name="image" accept="image/*" required multiple >
+                                        <span id="imageError" class="error-message "style="color:red"></span>
+                                    </div>
+                                </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Stock</label>
+                                        <input name="Stock" type="number" class="form-control border" id="stock" required>
+                                        <span id="stockError" class="error-message " style="color:red"></span>
+                                    </div>
+
+                                    <div class="col-md-9">
+                                        <div class="mb-4">
+                                            <input type="submit"  value="Add" onclick="validateProductForm(event)">
+                                        </div>
+                                </div> <!-- col.// -->
+                            </div> <!-- .row end// -->
+                        </div>
+                    </form>
+                    
+
+                    </div>
+
+                </div>
+            </div>
+            </div>
+        </section> <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+               
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/admin-assets/js/vendors/select2.min.js"></script>
+    <script src="/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <!-- <script src="/admin-assets/js/main.js" type="text/javascript"></script> -->
+
+<!--product validation form -->
+
+<script>
+
+    function checkImageLength(){
+        const imageInput = document.getElementById('image');
+        const selectedFiles = imageInput.files;
+        if(selectedFiles.length > 3){
+            imageInput.value = ""
+            document.getElementById("imageError").innerText="Only 3 allowed"
+
+        }
+    }
+  
+function validateProductForm(event){
+
+const productName=document.getElementById('productName').value.trim();
+const description=document.getElementById('description').value.trim();
+const brand=document.getElementById('brand').value.trim();
+const image=document.getElementById('image').value;
+const price = document.getElementById('price').value.trim();
+const stock = document.getElementById('stock').value.trim();
+
+
+
+//Reset error messages
+document.getElementById('productNameError').innerText='';
+document.getElementById('descriptionError').innerText='';
+document.getElementById('brandError').innerText='';
+document.getElementById('imageError').innerText='';
+document.getElementById('priceError').innerText = '';
+document.getElementById('stockError').innerText = '';
+
+
+
+
+
+let isValid=true;
+
+//validate product name
+if(!productName){
+document.getElementById("productNameError").innerText="ProductName is required"
+isValid=false;
+
+};
+
+//validate description 
+if(!description){
+document.getElementById("descriptionError").innerText="Description is required"
+isValid=false;
+};
+
+//validate brand
+if(!brand){
+document.getElementById("brandError").innerText="Brand is required"
+isValid=false
+};
+
+//validate image
+if(!image){
+document.getElementById("imageError").innerText="Image is required"
+isValid=false;
+}
+
+
+//validate price
+if(!price){
+document.getElementById("priceError").innerText="Price is required"
+isValid=false;
+
+}else if(isNaN(price)||parseFloat(price)<=0){
+document.getElementById("priceError").innerText="price must be valid number greater than 0";
+isValid=false;
+}
+
+//validate stock
+if(!stock){
+document.getElementById("stockError").innerText="Stock is required";
+isValid=false;
+
+}else if(isNaN(stock)||parseInt(stock)<0){
+document.getElementById("stockError").innerText="Stock must be a valid number greater than or equal to 0";
+isValid=false;
+}
+
+    if(!isValid){
+        event.preventDefault()
+    }
+}
+</script>
+</body>
+</html>
+
