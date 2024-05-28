@@ -4,6 +4,7 @@ const nodemailer = require('nodemailer')
 const Category = require('../model/categoryModel');
 const cart = require('../model/cartModel')
 const bcrypt = require('bcrypt')
+const { v4: uuidv4 } = require('uuid')
 const Address = require('../model/addressModel');
 const order = require("../model/orderModel");
 const Wishlist = require('../model/wishlistModel')
@@ -17,12 +18,13 @@ require('dotenv').config()
 
 const loadregister = async (req, res) => {
   try {
-    res.render("user/register")
+    res.render("user/register",{message:null})
 
   } catch (error) {
     console.log(error.message)
   }
 }
+
 
 
 
@@ -104,20 +106,38 @@ const loguser = async (req, res) => {
 
 
 
+function generateReferralCode() {
+  return uuidv4().substring(0, 8)
+}
+
 
 const insertUser = async (req, res) => {
   try {
-    console.log(req.body)
-    const password = await securePassword(req.body.password)
 
+  const existingUser=await User.findOne({email:req.body.email})
+  if(existingUser){
+   return res.render('user/register',{message:"User Already Exists"})
+
+  }
+
+  
+    const password = await securePassword(req.body.password)
+    const referralCode = generateReferralCode()
+    console.log(referralCode, "codes");
+    console.log(req.body.otherReferalCode, "referred");
     const userIn = {
       name: req.body.username,
       email: req.body.email,
       password: password,
+      referalCode: referralCode,
+      otherreferalCode: req.body.otherreferalCode,
+
     };
 
-    req.session.data = userIn
-    res.redirect('/loadotp')
+
+
+    req.session.data = userIn;
+    res.redirect('/loadotp');
 
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -210,8 +230,8 @@ const getOtp = async (req, res) => {
     const mail = await transporter.sendMail(mailOptions)
     if (mail) {
       console.log('mail transffred')
-    }
-    ;
+    };
+    
 
   } catch (error) {
     console.log(error)
@@ -232,25 +252,51 @@ const verifyOtp = async (req, res) => {
         email: user.email,
         mobile: user.mobile,
         password: user.password,
+        referalCode: user.referalCode,
+        otherreferalCode: user.otherreferalCode
       }
 
       const createduser = await User.create(saveUserData)
-      console.log(createduser)
+
+
+
+
       if (createduser) {
         const walletData = {
           userId: createduser._id,
           walletAmount: 0,
           Transaction: [
-            {
-              Amount: 0,
-              status: '',
-              remarks: ''
-            },
+
           ],
         }
         const wallet = await Wallet.create(walletData)
         console.log(wallet)
       }
+
+
+
+      if (createduser.otherreferalCode) {
+        const existingUser = await User.findOne({ referalCode: createduser.otherreferalCode });
+        if (existingUser) {
+
+          existingUser.WalletBalance += 200;
+          await existingUser.save()
+
+          const wallet = await Wallet.findOne({ userId: createduser._id });
+          if (wallet) {
+            await User.findByIdAndUpdate({_id:createduser._id},{$inc:{WalletBalance:50}})
+            wallet.walletAmount+=50;
+            await Wallet.findOneAndUpdate({ userId: createduser._id }, { $push: { 
+              Transaction: { Amount: '50', createdAt: Date.now(), status: 'credit', remarks: 'Amount Credited on Registration' } 
+            } })
+            
+           
+          }
+          
+          await wallet.save()
+        }
+      }
+
 
 
       const providedOtp = req.body.otp
@@ -398,7 +444,7 @@ const addCart = async (req, res) => {
         const newItem = {
 
           product: productId,
-          price: Product.offerPrice?Product.offerPrice:Product.price,
+          price: Product.offerPrice ? Product.offerPrice : Product.price,
           quantity: req.body.quantity,
           brand: Product.brand,
           productImage: Product.productImage
@@ -981,49 +1027,49 @@ const applyCoupon = async (req, res) => {
   try {
     console.log('entered in the function controller')
     const userId = req.session.user;
-    const {couponCode} = req.body
+    const { couponCode } = req.body
     const coupons = await Coupon.findOne({ couponCode: couponCode })
-    console.log('coupons',coupons)
+    console.log('coupons', coupons)
     console.log('Top level')
     if (!coupons) {
-      return res.status(400).json({ errorMessage:"Invalid Coupon Entered" });
+      return res.status(400).json({ errorMessage: "Invalid Coupon Entered" });
     }
 
     if (coupons.userId.includes(userId)) {
-      return res.status(400).json({ errorMessage:"You Already Used This Coupon" });
+      return res.status(400).json({ errorMessage: "You Already Used This Coupon" });
     }
 
     const currentDate = new Date();
     const expireDateParts = coupons.expireOn.split('-');
     const expireDate = new Date(expireDateParts[2], expireDateParts[1] - 1, expireDateParts[0]);
-       
-       if (coupons.expireOn && currentDate > expireDate) {
-        return res.status(400).json({ errorMessage: "Coupon Expired" });
-      }
-      
-     console.log('Ist level')
+
+    if (coupons.expireOn && currentDate > expireDate) {
+      return res.status(400).json({ errorMessage: "Coupon Expired" });
+    }
+
+    console.log('Ist level')
 
     const totalPrice = parseInt(req.body.totalPrice);
     console.log(totalPrice)
-console.log('2nd level')
+    console.log('2nd level')
 
-if (totalPrice < coupons.minimumPrice) {
-  return res.status(400).json({ errorMessage: "Order amount does not meet the minimum purchase requirement for this coupon" });
-}
-
-      
-      const discountedTotal = Math.floor(totalPrice - coupons.offerPrice);
-      // Update coupon usage for the user
+    if (totalPrice < coupons.minimumPrice) {
+      return res.status(400).json({ errorMessage: "Order amount does not meet the minimum purchase requirement for this coupon" });
+    }
 
 
+    const discountedTotal = Math.floor(totalPrice - coupons.offerPrice);
+    // Update coupon usage for the user
 
-      console.log(coupons.userId,'Array of values')
-      return res.json({
-        success: true,
-        discounted: discountedTotal,
-        reduction:totalPrice-coupons.offerPrice,
-        discount:coupons.offerPrice
-      });
+
+
+    console.log(coupons.userId, 'Array of values')
+    return res.json({
+      success: true,
+      discounted: discountedTotal,
+      reduction: totalPrice - coupons.offerPrice,
+      discount: coupons.offerPrice
+    });
   } catch (error) {
     console.error(error)
     res.status(500).send('Internal Server Error')

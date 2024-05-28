@@ -19,7 +19,19 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="assets/css/maind134.css?v=3.4">
 </head>
-
+<style>
+    .empty-cart-message {
+      text-align: center;
+      padding: 28px;
+      color: red;
+    }
+    .empty-cart-message h2.empty-cart-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: red;
+    }
+    
+  </style>
 <body>
     <header class="header-area header-style-1 header-height-2">
         <div class="header-top header-top-ptb-1 d-none d-lg-block">
@@ -594,6 +606,18 @@
                                 </thead>
                                 <tbody>
 
+
+                                    <% if (userCart.items.length === 0) { %>
+                                        <tr>
+                                          <td colspan="6" class="text-center">
+                                            <div class="empty-cart-message">
+                                                <h2 class="empty-cart-title">Your Cart Is Empty!!</h2>
+                                               
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      <% } else { %>
+
                                     <% for(let i=0; i < userCart.items.length; i++) { %>
                                         <tr>
                                             <td class="image product-thumbnail">
@@ -652,6 +676,7 @@
                                             </td>
                                         </tr>
                                         <% } %>
+                                        <%}%>
                                 </tbody>
                             </table>
                         </div>

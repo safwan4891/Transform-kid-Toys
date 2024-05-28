@@ -54,6 +54,22 @@ userId:{
     required:true
  },
 
+
+ couponDetails:{
+  couponId:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'Coupon',
+   
+  },
+  offerPrice:{
+    type:Number,
+    default:0,
+    
+    },
+
+
+ },
+
  status:{
   type:String,
   required:true
@@ -71,6 +87,8 @@ userId:{
 
 
 })
+
+
 
 
 const order=mongoose.model('order',orderSchema)

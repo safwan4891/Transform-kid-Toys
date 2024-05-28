@@ -1,12 +1,11 @@
 const Product=require("../model/productModel");
 const Category=require("../model/categoryModel");
 const product = require("../model/productModel");
-
-
+const sharp=require('sharp');
+const path=require('path');
 
 
 const getProductAddPage=async(req,res)=>{
-
   try{
     const categories=await Category.find({isListed:true})
     console.log("categories",categories)
@@ -35,7 +34,21 @@ if(existingProduct){
 
 }else{
 const Images=req.files;
-const imagefilename=Images.map(img=>img.filename);
+const imagefilename=[];
+
+//processing each image using sharp
+for(const img of Images){
+  const filename=`${Date.now()}-${img.originalname}`;
+  const outputPath=path.join(__dirname,"../public/images",filename)
+
+await sharp(img.path)
+.resize(500,500,{fit:"cover"})
+.toFile(outputPath)
+
+imagefilename.push(filename);
+
+}
+
 
 console.log(mycategory,'cate')
   const newProduct = new Product( {
@@ -77,6 +90,11 @@ const load_editProduct=async(req,res)=>{
   }
 }
 
+
+
+
+
+
 const editProduct=async(req,res)=>{
   try {
     const {productName,description,price,brand,mycategory,Stock,id}=req.body
@@ -97,8 +115,21 @@ const editProduct=async(req,res)=>{
   }
     else{
       const Images=req.files;
-      const imagefilename=Images.map(img=>img.filename);
+      const imagefilename=[];
+
+      for (const img of Images){
+       const filename=`${Date.now()}-${img.originalname}`;
+       const outputPath=path.join(__dirname,"../public/images",filename)
+       
+       await sharp(img.path)
+      .resize(500,500,{fit:"cover"})
+     .toFile(outputPath)
+     imagefilename.push(filename);
+
+
+      }
       
+
       console.log(mycategory,'cate')
         const newProduct =  {
           productName:productName,
@@ -203,9 +234,7 @@ console.log(err.message);
 const deleteSingleImage=async(req,res)=>{
 try {
   const{imageName,productId}=req.body;
-  const product=await Product.findByIdAndUpdate(productId,{
- $pull:{productImage:imageName}
-  })
+  const product=await Product.findByIdAndUpdate(productId,{ $pull:{productImage:imageName}})
  console.log(imageName,"imgs");
 
 res.status(200).json({success:true})

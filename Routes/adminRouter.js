@@ -12,7 +12,7 @@ const {islogin,isLogout}=require('../middleware/adminmiddleware')
 
 
 
-
+////........................................................................
 
 
 //admin
@@ -29,7 +29,6 @@ router.get('/blockuser',islogin,adminController.userBlock)
 router.get('/unblockuser',islogin,adminController.userUnblock)
 
 //Product Managaement
-
 router.get("/addProducts",islogin,productController.getProductAddPage)
 router.post("/addproducts",islogin,upload.array("image",3),productController.addProducts)
 router.get("/products",islogin,productController.getProductList)
@@ -72,6 +71,12 @@ router.post("/addOffers",islogin,adminController.addOffer)
 router.get("/blockoffer/:offerId",islogin,adminController.offerBlock)
 router.get("/editoffer",islogin,adminController.geteditOffer)
 router.post('/editOffer/:offerId',islogin,adminController.editOffer)
+
+//salesReport
+router.get("/getsalesReport",islogin,adminController.getSalesReport)
+router.get("/getCustomSalesReport",islogin,adminController.getCustomSalesReport)
+
+
 
 
 module.exports = router

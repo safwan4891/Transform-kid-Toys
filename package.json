@@ -16,8 +16,10 @@
     "nodemailer": "^6.9.9",
     "nodemon": "^3.0.3",
     "otp-generator": "^4.0.1",
+    "path": "^0.12.7",
     "razorpay": "^2.9.2",
     "session": "^0.1.0",
+    "sharp": "^0.33.4",
     "y": "^0.3.2"
   },
   "scripts": {

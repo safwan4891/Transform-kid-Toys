@@ -32,7 +32,7 @@
         </div>
         <nav>
             <ul class="menu-aside">
-                <li class="menu-item">
+                <li class="menu-item active">
                     <a class="menu-link" href="/admin/home"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
@@ -41,29 +41,73 @@
                     <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
-                   
+                    <div class="submenu">
+                        <a href="page-products-list.html">Product List</a>
+                      
+                    </div>
                 </li>
                 <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-orders-1.html"> <i class="icon material-icons md-shopping_cart"></i>
+                    <a class="menu-link" href="/admin/orderlist"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
+                    </a>
+                    <div class="submenu">
+                        <a href="page-orders-1.html">Order list 1</a>
+                        <a href="page-orders-2.html">Order list 2</a>
+                        <a href="page-orders-detail.html">Order detail</a>
+                    </div>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/userList"> <i class="icon material-icons md-store"></i>
+                        <span class="text">Users</span>
                     </a>
                     
                 </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/userlist"> <i class="icon material-icons md-store"></i>
-                        <span class="text">Users</span>
-                    </a>
-                
-                </li>
-                <li class="menu-item active">
-                    <a class="menu-link" href="/admin/addproducts"> <i class="icon material-icons md-add_box"></i>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="/admin/addProducts"> <i class="icon material-icons md-add_box"></i>
                         <span class="text">Add product</span>
                     </a>
+                   
                 </li>
+
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-monetization_on"></i>
                         <span class="text">Category</span>
                     </a>
+
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="/admin/addCoupon"> <i class="icon material-icons md-add_box"></i>
+                            <span class="text">Add Coupon</span>
+                        </a>
+                       
+                    </li>
+
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="/admin/couponList"> <i class="icon material-icons md-class"></i>
+                            <span class="text"> Coupon</span>
+                        </a>
+                       
+                    </li>
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="/admin/offerlist"> <i class="icon material-icons md-monetization_on"></i>
+                            <span class="text"> OfferList</span>
+                        </a>
+                       
+                    </li>
+
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="/admin/addOffer"> <i class="icon material-icons md-monetization_on"></i>
+                            <span class="text">Add Offer</span>
+                        </a>
+                       
+                    </li>
+
+
+                    <li class="menu-item">
+                        <a class="menu-link" href="/admin/getsalesReport"> <i class="icon material-icons md-description"></i>
+                            <span class="text">Sales Report</span> </a>
+                    </li>
+
+
                    
             </ul>
             <br>
@@ -146,7 +190,7 @@
                                 </div>
                                 <div class="col-md-9">
                                     <div class="mb-4">
-                                        <label class="form-label">Cost in Dollar</label>
+                                        <label class="form-label">Cost in Rupees</label>
                                         <input type="text" placeholder="$00.0" class="form-control" name="price" id="price" required>
                                         <span id="priceError" class="error-message "style="color:red"></span>
                                     </div>

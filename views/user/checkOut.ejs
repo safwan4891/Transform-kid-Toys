@@ -28,6 +28,36 @@
 
 </head>
 
+<style>
+
+.add-address-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #007bff;
+  border: 2px solid #007bff;
+  border-radius: 25px;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.add-address-btn:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.add-address-btn:active {
+  background-color: #004085;
+  border-color: #004085;
+  transform: scale(1);
+}
+</style>
 <body>
     <header class="header-area header-style-1 header-height-2">
         <div class="header-top header-top-ptb-1 d-none d-lg-block">
@@ -678,7 +708,7 @@
                                                         <p>Name: <%= el.Name %>
                                                         </p>
                                                     </address>
-                                                    <!-- <a href="/getAddress" class="btn btn-primary btn-small mt-4">Add Address</a></button> -->
+                                                   
                                                 </div>
                                             </div>
                                         </div>
@@ -686,8 +716,7 @@
                                     <% }) %>
                                         <% } %>
                         </div>
-
-
+                        <a href="/getAddress" class="btn btn-primary btn-small mt-4 add-address-btn">Add Address</a>
                        
                         <input type="hidden" name="total" id="" value="">
                     </div>
@@ -889,15 +918,20 @@
                 console.log("Selected Address ID:", selectedAddressId);
 
 
+            
+
+
                 // Perform further actions like sending the selected address ID to the server
                 // Example AJAX request:
 
                 const response = $.ajax({
                     url: "/orderPlaced",
                     method: "POST",
-                    data: { addressId: selectedAddressId, paymentMethod: selectedPayment,total,couponCode  },
+                    data: { addressId: selectedAddressId, paymentMethod: selectedPayment,total,couponCode},
                     
                     success: (responce) => {
+                    console.log(responce,"response")  
+                        
                         if (responce.payment === 'razorpay') {
                             console.log(responce)
 
@@ -908,7 +942,7 @@
                                 "currency": "INR",
                                 "name": "Transform Kid Toys", //your business name
                                 "description": "Test Transaction",
-                                "image": "https://example.com/your_logo",
+                                "image": "/assets/imgs/theme/logo.jpg",
                                 "order_id": responce.data.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                                 "handler": function (response) {
                                     alert(response.razorpay_payment_id);
@@ -934,6 +968,8 @@
                             console.log('hi')
                             var rzp1 = new Razorpay(options);
                             rzp1.on('payment.failed', function (response) {
+                                paymentFailure(responce.oid)
+                                alert('Payment has been failed');
                                 alert(response.error.code);
                                 alert(response.error.description);
                                 alert(response.error.source);
@@ -941,27 +977,50 @@
                                 alert(response.error.reason);
                                 alert(response.error.metadata.order_id);
                                 alert(response.error.metadata.payment_id);
+
                             });
+
+
                             console.log('kjjbhjdbhjbhj')
                             console.log(document.getElementById('confirmbtn'))
                             document.getElementById('confirmbtn').onclick = function (e) {
                                 console.log('hvhgsvd')
                                 rzp1.open();
                                 console.log('hhhhhhhhhhhhh')
+
                                 e.preventDefault();
                             }
 
                         } else if (responce.payment === 'cod') {
                             window.location.href = '/placedOrder'
                         }
-                        //   else if(responce.payment==='Wallet'){
-                        //     console.log('Redirecting to /placedOrder');
-                        //    window.location.href=('/placedOrder')
-                        //   }
+                        else if(responce.error!=null)
+                        {
+                            Swal.fire({
+            icon: 'warning',
+            title: 'order is not placed',
+            text: responce.error,
+            confirmButtonText: 'OK'
+        }); 
+                        }
+                          else if(responce.payment==='Wallet'){
+                           window.location.href=('/placedOrder')
+                         }else if(responce.nobalance){
+                          Swal.fire({
+                           icon:'warning',
+                           title:'Order Not Placed',
+                           text:responce.nobalance,
+                           confirmButtonText:"OK"
+                          })
+
+                         }
 
                     },
+                    
                     error: (err) => {
+                        console.log(err,"error");
     const errorMessage = err.responseText; // Assuming the error message is in the response text
+    console.log(errorMessage,"message error");
     if (errorMessage.includes('Product is blocked')) {
         // Display SweetAlert warning for blocked product
         Swal.fire({
@@ -989,16 +1048,30 @@
             }
         };
 
+        function paymentFailure (orderId) {
+                    $.ajax({
+                        url: '/paymentfailed',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ orderId: orderId }),
+                        success: function (confirmResponse) {
+                            console.log(confirmResponse);
+                           
+                        },
+                        error: function (confirmError) {
+                            console.error(confirmError);
+                            alert('Error confirming order. Please try again.');
+                        }
+                    });
+       
+        }
+
 
 
         function verifyPayment(order, payment) {
             console.log('hi')
             console.log(order, "order work");
-            console.log(payment, "payment work");
-
-
-
-
+            console.log(payment, "payment work")
             $.ajax({
                 url: "/verifyPayment",
                 method: 'POST',
@@ -1010,21 +1083,7 @@
                     // Assuming orderId is returned in the response data
                     const orderId = order.receipt;
                     console.log(orderId, "oiosdfiodfndonvd")
-                    // Send confirmation request
-                    $.ajax({
-                        url: '/confirm',
-                        method: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({ orderId: orderId }),
-                        success: function (confirmResponse) {
-                            console.log(confirmResponse);
-                            alert('Order confirmed successfully.');
-                        },
-                        error: function (confirmError) {
-                            console.error(confirmError);
-                            alert('Error confirming order. Please try again.');
-                        }
-                    });
+                  
                 },
                 error: function (error) {
                     console.error(error);

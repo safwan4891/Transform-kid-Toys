@@ -23,17 +23,25 @@ isAdmin:{
 type:Number,
 
 },
-isBlocked:{
-  type:Boolean,
-  default:false
-},
- 
+
 WalletBalance:{
   type:Number,
   default:0
 
 },
+ referalCode:{
+   type:String
+ },
 
+ otherreferalCode:{
+  type:String
+ },
+
+ isBlocked:{
+  type:Boolean,
+  default:false
+},
+ 
 
 })
 

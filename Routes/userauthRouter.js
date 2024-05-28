@@ -55,7 +55,11 @@ router.get('/orderDetail',session.is_userlogin,orderController.orderDetailPageUs
 router.patch('/orderCancelled',session.is_userlogin,orderController.userOrderCancel)
 router.patch('/orderReturned',session.is_userlogin,orderController.returnOrder)
 router.post('/verifyPayment',session.is_userlogin,orderController.verifyPayment)
-router.post('/confirm',session.is_userlogin,orderController.paymentConfirm)
+router.post('/paymentfailed',session.is_userlogin,orderController.paymemtFailure)
+router.post('/payAgain',session.is_userlogin,orderController.payAgain)
+router.post('/payAgainVerifyPayment',session.is_userlogin,orderController.payAgainVerifyPayment)
+
+// router.post('/confirm',session.is_userlogin,orderController.paymentConfirm)
 
 //shop
 router.get('/shop',session.is_userlogin,userController.getShopPage)

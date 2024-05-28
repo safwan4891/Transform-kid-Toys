@@ -40,7 +40,7 @@
         </div>
         <nav>
             <ul class="menu-aside">
-                <li class="menu-item">
+                <li class="menu-item active">
                     <a class="menu-link" href="/admin/home"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
@@ -49,19 +49,32 @@
                     <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
-
+                    <div class="submenu">
+                        <a href="page-products-list.html">Product List</a>
+                      
+                    </div>
                 </li>
                 <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-orders-1.html"> <i class="icon material-icons md-shopping_cart"></i>
+                    <a class="menu-link" href="/admin/orderlist"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
                     </a>
-
+                    <div class="submenu">
+                        <a href="page-orders-1.html">Order list 1</a>
+                        <a href="page-orders-2.html">Order list 2</a>
+                        <a href="page-orders-detail.html">Order detail</a>
+                    </div>
                 </li>
-                <li class="menu-item ">
-                    <a class="menu-link" href="/admin/userlist"> <i class="icon material-icons md-store"></i>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/userList"> <i class="icon material-icons md-store"></i>
                         <span class="text">Users</span>
                     </a>
-
+                    
+                </li>
+                <li class="menu-item has-submenu">
+                    <a class="menu-link" href="/admin/addProducts"> <i class="icon material-icons md-add_box"></i>
+                        <span class="text">Add product</span>
+                    </a>
+                   
                 </li>
 
                 <li class="menu-item has-submenu">
@@ -69,7 +82,38 @@
                         <span class="text">Category</span>
                     </a>
 
-            </ul>
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="/admin/addCoupon"> <i class="icon material-icons md-add_box"></i>
+                            <span class="text">Add Coupon</span>
+                        </a>
+                       
+                    </li>
+
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="/admin/couponList"> <i class="icon material-icons md-class"></i>
+                            <span class="text"> Coupon</span>
+                        </a>
+                       
+                    </li>
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="/admin/offerlist"> <i class="icon material-icons md-monetization_on"></i>
+                            <span class="text"> OfferList</span>
+                        </a>
+                       
+                    </li>
+
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="/admin/addOffer"> <i class="icon material-icons md-monetization_on"></i>
+                            <span class="text">Add Offer</span>
+                        </a>
+                       
+                    </li>
+
+
+                    <li class="menu-item">
+                        <a class="menu-link" href="/admin/getsalesReport"> <i class="icon material-icons md-description"></i>
+                            <span class="text">Sales Report</span> </a>
+                    </li>
             <br>
             <br>
         </nav>
@@ -240,6 +284,7 @@
     <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
     <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
     <script src="/admin-assets/js/vendors/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/admin-assets/js/vendors/perfect-scrollbar.js"></script>
     <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
@@ -306,7 +351,7 @@
 
             
 
-            // Validate offer name
+            // Validate offer Name
             if (!offerName) {
                 
                 console.log(offerName,"name");
@@ -342,6 +387,9 @@
                 isValid = false;
             }
 
+
+    
+
             if (isValid) {
 
               }
@@ -350,8 +398,46 @@
         }
 
 
+
+        
     </script>
 
+
+
+<script>
+window.onload = function() {
+    const Errmessage = '<%= message %>' ? '<%= message %>' : null;
+
+    if (Errmessage) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: Errmessage,
+        });
+    }
+};
+
+
+window.onload=function(){
+const ErrSmessage='<%=message%>'   ?'<%=message%>':null;
+ 
+if(ErrSmessage){
+  Swal.fire({
+  icon:'error',
+title:'Oops...',
+text:ErrSmessage
+
+  })
+
+
+}
+
+}
+
+ 
+
+
+</script>
 
 </body>
 

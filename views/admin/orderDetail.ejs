@@ -140,9 +140,7 @@
                                 <% if (order.status !=='Returned' && order.status !=='Delivered' ) { %>
                                     <option value="Delivered">Delivered</option>
                                     <%}%>
-                                        <% if (order.status !=='Delivered' && order.status !=='Returned' ) { %>
-                                            <option value="Cancelled">Cancelled</option>
-                                            <% } %>
+                                       
                             </select>
                             <a class="btn btn-primary" href="#">Save</a>
                             <a class="btn btn-secondary print ms-2" href="#"><i
@@ -247,7 +245,7 @@
                                                         <td>
                                                             <% if (order.status !=='Delivered' && item.status!=='Returned' &&item.status=='Confirmed' ) { %>
                                                                 <button type="button" class="px-9 btn btn-danger"
-                                                                    onclick="handleSelection('<%= order._id %>','<%= item.Product._id %>','<%=item.price*item.quantity%>')">Cancel
+                                                                    onclick="handleSelections('<%= order._id %>','<%= item.Product._id %>','<%=item.price*item.quantity%>')">Cancel
                                                                     Order</button>
                                                                 <% } %>
 
@@ -332,7 +330,7 @@
 
         //cancel Order
 
-        function handleSelection(orderId, productId) {
+        function handleSelections(orderId, productId) {
             alert(productId)
             console.log(productId, "id");
             Swal.fire({

@@ -193,6 +193,20 @@
                                                 <input required="" type="password" name="confirmPassword" id="confirmPassword"  placeholder="Confirm password">
                                                 <p id="confirmPasswordError"  style="color: red;"></p>
                                             </div>
+
+                                            <div class="form-group">
+                                                <input type="code" name="otherreferalCode" id=" referalCode"  placeholder="Referral Code">
+                                            
+                                            </div>
+
+                                            
+                                            <div class="form-group">
+                                                <label for="hasReferralCode">Do you have a referral code?</label><br>
+                                                <input type="checkbox" id="otherreferalCode" name="otherreferalCode">
+                                               
+                                            </div>
+
+                                            
                                             <div class="login_footer form-group">
                                                 <div class="chek-form">
                                                     <div class="custome-checkbox">
@@ -333,6 +347,7 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Vendor JS-->
     <script src="assets/js/vendor/modernizr-3.6.0.min.js"></script>
     <script src="assets/js/vendor/jquery-3.6.0.min.js"></script>
@@ -361,6 +376,26 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-frontend/page-login-register.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 15 Jul 2023 10:10:07 GMT -->
 </html>
 
+
+<script>
+window.onload=function(){
+
+const Errmessage='<%=message%>';
+if(Errmessage){
+
+    Swal.fire({
+     icon:'error',
+     title:'Oops..',
+     text:Errmessage
+
+    })
+
+
+}
+
+}
+
+</script>
 
 
 <script>
@@ -419,6 +454,9 @@ function validateForm() {
 
             return valid;
         }
+
+
+
 
 
 

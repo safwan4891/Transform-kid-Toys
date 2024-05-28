@@ -1,4 +1,6 @@
 const CategoryModel = require("../model/categoryModel");
+const product = require("../model/productModel");
+
 
 const getCategoryPage = async (req, res) => {
   try {
@@ -75,6 +77,7 @@ const getBlockCategory = async (req, res) => {
     let id = req.params.id;
     console.log(id);
     await CategoryModel.updateOne({ _id: id }, { $set: { isListed: false } });
+    await product.updateMany({category:id},{$set:{isBlocked:true}});
     res.status(200).json({ success: true });
   } catch (error) {
     console.log(error.message);
@@ -87,6 +90,7 @@ const getUnblockCategory = async (req, res) => {
     console.log(id);
     console.log("it is working");
     await CategoryModel.findByIdAndUpdate({ _id: id }, { $set: { isListed: true } });
+    await product.updateMany({category:id},{$set:{isBlocked:false}});
     res.status(200).json({ success: true });
   } catch (error) {
     res.redirect("/pageerror");
