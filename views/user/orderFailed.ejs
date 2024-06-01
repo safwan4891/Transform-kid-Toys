@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Failed</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .order-details {
+      max-width: 600px;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
+    }
+
+    .order-details h2 {
+      color: #dc3545;
+      font-size: 36px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .order-details p {
+      font-size: 20px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .cross-mark {
+      color: #dc3545;
+      font-size: 64px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .btn-retry {
+      display: block;
+      width: 100%;
+      max-width: 200px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      font-size: 18px;
+      text-align: center;
+      color: #ffffff;
+      background-color: #dc3545;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-retry:hover {
+      background-color: #b21f2d;
+    }
+
+    .btn-home {
+      display: block;
+      width: 100%;
+      max-width: 200px;
+      margin: 20px auto 0;
+      padding: 12px 24px;
+      font-size: 18px;
+      text-align: center;
+      color: #ffffff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-home:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="order-details">
+      <div class="cross-mark">&#10060;</div>
+      <h2>Order Failed</h2>
+      <p>We're sorry, but there was an issue with your order. Please try again or contact support if the issue persists.</p>
+      <a href="/" class="btn btn-primary btn-home">Back to Home</a>
+    </div>
+  </div>
+</body>
+
+</html>

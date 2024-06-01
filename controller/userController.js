@@ -89,11 +89,13 @@ const loguser = async (req, res) => {
           res.redirect("/");
         } else {
           console.log('password not match')
+          res.render("user/login", { errmessage: "Password Not Match" });
         }
 
       }
     } else {
-      console.log('user not fount')
+      console.log('user not found')
+      res.render("user/login", { errmessage: "User Not Found" });
     }
 
 
@@ -587,12 +589,17 @@ const userProfile = async (req, res) => {
     const userdata = await User.findOne({ _id: userid })
     const addressData = await Address.find({ userId: userid })
     console.log("addressdata", addressData);
-    const walletData = await Wallet.find({ userId: userid })
-    console.log(walletData, "reee");
+    const walletData = await Wallet.find({ userId: userid})
+    
+    walletData.forEach(wallet=>{
+   wallet.Transaction.sort((a,b)=>new Date(b.createdAt)-(a.createdAt))
+
+    })
+    console.log(walletData,"wallet");
     let name = userdata.name
     console.log('name evde', name);
     let mobile = userdata.mobile
-    const orders = await order.find({}).populate("userId").sort({ createdAt: -1 })
+    const orders = await order.find({userId:userid}).sort({ createdAt: -1 })
     res.render('user/userProfile', { name, mobile, orders, userAddress: addressData, wallet: userdata.WalletBalance, walletData }) //ividNNU name,email pass cheyyum frontendikku variable name,email
 
   } catch (error) {
@@ -879,52 +886,43 @@ const filterByPrice = async (req, res) => {
 const filterByCategory = async (req, res) => {
   console.log("diecast");
   try {
-
     const user = req.session.user;
-    const category = req.query.id || null
-
-
-    // console.log(category,"ruhi");
+    const category = req.query.id || null;
+    const gt = parseFloat(req.query.gt) || 0;
+    const lt = parseFloat(req.query.lt) || Infinity;
 
     const categories = await Category.find({ isListed: true });
-    // console.log(categories,"inside")
+console.log(req.query.sort,'hello');
     let products;
     if (req.query.sort === 'pricelowToHighProducts') {
-      products = await product.find({ category: category }).sort({ price: 1 })
-    }
-    else if (req.query.sort === 'priceHighToLowProducts') {
-      products = await product.find({ category: category }).sort({ price: -1 })
-    }
-    else if (req.query.id) {
-      console.log('category', category)
-      products = await product.find({ category: category })
-    }
-    else if (req.query.sort = "priceLowToHighProducts" && req.query.id) {
-      console.log('hhbjhbjkdbjkcbkj', category)
-      products = await product.find({ category: category }).sort({ price: 1 })
-
-    }
-    else if (req.query.sort = "priceHighToLowProducts" && req.query.id) {
-      products = await product.find({ category: category }).sort({ price: -1 })
+      products = await product.find({ category: category, price: { $gt: gt, $lt: lt } }).sort({ price: 1 });
+    } else if (req.query.sort === 'priceHighToLowProducts') {
+      products = await product.find({ category: category, price: { $gt: gt, $lt: lt } }).sort({ price: -1 });
+    } else if (req.query.id) {
+      console.log('category', category);
+      products = await product.find({ category: category, price: { $gt: gt, $lt: lt } });
+    } else if (req.query.sort === "priceLowToHighProducts" && req.query.id) {
+      console.log('hhbjhbjkdbjkcbkj', category);
+      products = await product.find({ category: category, price: { $gt: gt, $lt: lt } }).sort({ price: 1 });
+    } else if (req.query.sort === "priceHighToLowProducts" && req.query.id) {
+      products = await product.find({ category: category, price: { $gt: gt, $lt: lt } }).sort({ price: -1 });
     }
 
     console.log("proucts", products);
     const currentPage = parseInt(req.query.page) || 1;
     const pageSize = 9;
-    const totalProducts = await product.countDocuments({ categoryid: category, isBlocked: false })
-    const totalPages = Math.ceil(totalProducts / pageSize)
+    const totalProducts = await product.countDocuments({ category: category, price: { $gt: gt, $lt: lt }, isBlocked: false });
+    const totalPages = Math.ceil(totalProducts / pageSize);
     const pagination = {
       currentPage, pageSize, totalPages, hasNextPage: currentPage < totalPages,
       hasPreviousPage: currentPage > 1,
     };
 
-    res.render('user/filterShop', { user, categories, pagination, totalPages, products, selectedCategory: category })
+    res.render('user/filterShop', { user, categories, pagination, totalPages, products, selectedCategory: category, query: req.query });
   } catch (error) {
-    console.error(error)
-    res.status(500).send("Internal Server Error")
-
+    console.error(error);
+    res.status(500).send("Internal Server Error");
   }
-
 }
 //...........................................................
 const sortProductsAtoZ = async (req, res) => {

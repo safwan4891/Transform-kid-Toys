@@ -176,7 +176,7 @@
                                         <p class="mb-50 font-sm">
                                             Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our privacy policy
                                         </p>
-                                        <form onsubmit='return validateForm()' method="post">
+                                        <form onsubmit='validateForm()' method="post">
                                             <div class="form-group">
                                                 <input type="text" required="" name="username" id="username" placeholder="Username">
                                                 <P id="usernameError" style="color:red;"></P>
@@ -215,7 +215,7 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <button type="submit" class="btn btn-fill-out btn-block hover-up" name="login">Submit &amp; Register</button>
+                                                <button type="submit" class="btn btn-fill-out btn-block hover-up" onclick="validateForm(event)" name="login">Submit & Register</button>
                                             </div>
                                         </form>
                                         <div class="divider-text-center mt-15 mb-15">
@@ -401,20 +401,22 @@ if(Errmessage){
 
 
 
-function validateForm() {
-            const email = document.getElementById('email').value
-            const password = document.getElementById('password').value
-            const confirmPassword = document.getElementById('confirmPassword').value
-            const username = document.getElementById('username').value
+function validateForm(event) {
+            const email = document.getElementById('email').value.trim()
+            const password = document.getElementById('password').value.trim()
+            const confirmPassword = document.getElementById('confirmPassword').value.trim()
+            const username = document.getElementById('username').value.trim()
             const emailPattern =/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             const alpha = /[a-zA-Z]/;
             const digit = /\d/;
+            const specialChar = /[@#\$%\^&\*\(\)_\+\-=\[\]\{\};':"\\|,.<>\/?]+/;
+             const uppercase = /[A-Z]/;
             const emailError = document.getElementById('emailError');
             const passwordError = document.getElementById('passwordError');
             const confirmPasswordError = document.getElementById('confirmPasswordError')
             const usernameError = document.getElementById('usernameError')
 
-           let valid=true;
+           let isValid=true;
 
             // Reset error messages
             
@@ -426,32 +428,58 @@ function validateForm() {
 
 
             // Validate email
-            if (!emailPattern.test(email)) {
+            if(!email){
+            emailError.innerText = 'Email is Required';
+            isValid=false;
+            }
+
+           else if (!emailPattern.test(email)) {
             emailError.innerText = 'Invalid email format';
             valid = false;
         }
         
             // Validate password
-            if (password.length < 8) {
+              if(!password){
+                passwordError.innerText = 'Password is Required';
+                valid=false;
+              }
+
+           else if (password.length < 8) {
                 passwordError.style.display = 'block';
                 passwordError.innerHTML = 'Password must have at least 8 characters';
                 valid = false;
-            } else if (!alpha.test(password) || !digit.test(password)) {
-                passwordError.style.display = 'block';
-                passwordError.innerHTML = 'Password must contain both letters and numbers';
-                valid = false;
-            }else if (password!==confirmPassword){
-                console.log(confirmPassword)
-                confirmPasswordError.style.display = 'block';
-                confirmPasswordError.innerHTML = 'Passwords must be same';
-                valid = false;
-            }else if (username.length<3){
-                usernameError.style.display = 'block';
-                usernameError.innerHTML = 'Passwords must be same';
-                valid = false;
+            } else if (!alpha.test(password) || !digit.test(password) || !specialChar.test(password) || !uppercase.test(password)) {
+              passwordError.style.display = 'block';
+              passwordError.innerHTML = 'Password must contain letters (A-Za-z), numbers (0-9), special characters (@#$%^&*), and at least one uppercase letter (A-Z)';
+               valid = false;
             }
 
-            return valid;
+             if (!confirmPassword) {
+             confirmPasswordError.innerText = 'Confirm password is required';
+                isValid = false;
+                  } else if (password !== confirmPassword) {
+                confirmPasswordError.innerText = 'Passwords must match';
+                isValid = false;
+         }
+
+         if (!username) {
+        usernameError.innerText = 'Username is required';
+        isValid = false;
+    } else if (username.length < 3) {
+        usernameError.innerText = 'Username must be at least 3 characters long';
+        isValid = false;
+    } else if (/\s/.test(username)) {
+        usernameError.innerText = 'Username cannot contain spaces';
+        isValid = false;
+    }
+
+      if(!isValid){
+      event.preventDefault();
+
+
+      }
+
+           
         }
 
 

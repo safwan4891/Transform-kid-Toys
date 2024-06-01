@@ -358,6 +358,16 @@ const orderSucess = (req, res) => {
   }
 }
 
+
+const orderFailed=(req,res)=>{
+ res.render('user/orderFailed')
+try {
+  
+} catch (error) {
+  console.log(error)
+}
+
+}
 //...............................................................
 
 const getOrderListPage = async (req, res) => {
@@ -738,6 +748,7 @@ module.exports = {
   getCheckoutPage,
   orderPlaced,
   orderSucess,
+  orderFailed,
   getOrderListPage,
   getOrderDetailPage,
   adminOrderCancel,

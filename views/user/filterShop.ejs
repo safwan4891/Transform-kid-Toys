@@ -723,9 +723,9 @@
                                     </div>
                                     <div class="sort-by-dropdown">
                                         <ul>
-                                            <li><a class="active" href="#">Featured</a></li>
-                                            <li><a  href="/filterCategory?id=<%=selectedCategory ? selectedCategory : null%>&sort=pricelowToHighProducts">Price: Low to High</a></li>
-                                            <li><a href="/filterCategory?id=<%=selectedCategory ? selectedCategory : null%>&sort=priceHighToLowProducts">Price: High to Low</a></li>
+                                               <li><a class="<%= !locals.query.sort ? 'active' : '' %>" href="/filterCategory?id=<%= selectedCategory ? selectedCategory : null %>">Featured</a></li>
+                                                <li><a class="<%= locals.query.sort === 'pricelowToHighProducts' ? 'active' : '' %>" href="/filterCategory?id=<%= selectedCategory ? selectedCategory : null %>&sort=pricelowToHighProducts">Price: Low to High</a></li>
+                                                <li><a class="<%= locals.query.sort === 'priceHighToLowProducts' ? 'active' : '' %>" href="/filterCategory?id=<%= selectedCategory ? selectedCategory : null %>&sort=priceHighToLowProducts">Price: High to Low</a></li>
                                             <!-- <li><a href="#">Release Date</a></li>
                                             <li><a href="#">Avg. Rating</a></li> -->
                                         </ul>
@@ -822,12 +822,21 @@
                               
                                 <div class="bt-1 border-color-2"></div>
                             </div>
-                                <div class="price-options">
-                                  <a href="/filterPrice?gt=0&lt=500"><button type="button" class="btn btn-price" data-min="0" data max="500">Under 500</button>
-                                   <a href="/filterPrice?gt=500&lt=1000"> <button type="button"class="btn btn-price" data-min="500" data max="1000">500-1000</button>
-                                    <a href="/filterPrice?gt=1000&lt=5000"><button type="button" class="btn btn-price" data-min="1000" data max="5000">1000-5000</button>
-                                    <a href="/filterPrice?gt=5000&lt=99999"><button  type="button" class="btn btn-price" data-min="5000"  data max="99999">Above 5000</button>
-                                </div>   
+                            <div class="price-options">
+                                <a href="/filterCategory?id=<%= selectedCategory ? selectedCategory : null %>&gt=0&lt=500&sort=<%= locals.query.sort %>">
+                                  <button type="button" class="btn btn-price" data-min="0" data-max="500">Under 500</button>
+                                </a>
+                                <a href="/filterCategory?id=<%= selectedCategory ? selectedCategory : null %>&gt=500&lt=1000&sort=<%= locals.query.sort %>">
+                                  <button type="button" class="btn btn-price" data-min="500" data-max="1000">500-1000</button>
+                                </a>
+                                <a href="/filterCategory?id=<%= selectedCategory ? selectedCategory : null %>&gt=1000&lt=5000&sort=<%= locals.query.sort %>">
+                                  <button type="button" class="btn btn-price" data-min="1000" data-max="5000">1000-5000</button>
+                                </a>
+                                <a href="/filterCategory?id=<%= selectedCategory ? selectedCategory : null %>&gt=5000&lt=99999&sort=<%= locals.query.sort %>">
+                                  <button type="button" class="btn btn-price" data-min="5000" data-max="99999">Above 5000</button>
+                                </a>
+                              </div>
+                              
                                 </div>
 
                                 <div class="sidebar-widget price_range range mb-30">
