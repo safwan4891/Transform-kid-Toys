@@ -55,6 +55,11 @@ app.use("/admin", adminRouter);
 
 
 
+app.use('*',(req,res)=>{
+ res.render('user/404')
+
+})
+
 
 app.listen(4000, () => {
     console.log("server is running on http://localhost:4000");
