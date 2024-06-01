@@ -33,10 +33,10 @@
             <div class="card mx-auto card-login">
                 <div class="card-body">
                     <h4 class="card-title mb-4">Sign in</h4>
-                    <form action="" method="post">
+                    <form onsubmit='validateForm()' method="post">
                         <div class="mb-3">
                             <input class="form-control" placeholder="Username or email" type="text" name="username" id="email">
-                            <p id="usernameError" class="error-msg" style="color:red;"></p>
+                            <p id="emailError" class="error-msg" style="color:red;"></p>
                         </div> <!-- form-group// -->
                         <div class="mb-3">
                             <input class="form-control" placeholder="Password" type="password" name="password" id="password">
@@ -50,7 +50,7 @@
                             </label>
                         </div> <!-- form-group form-check .// -->
                         <div class="mb-4">
-                            <button type="submit" class="btn btn-primary w-100"> Login </button>
+                            <button type="submit" class="btn btn-primary w-100"    onclick="validateForm(event)"> Login </button>
                         </div> <!-- form-group// -->
                     </form>
                     
@@ -71,6 +71,7 @@
     <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
     <!-- Main Script -->
     <script src="/admin-assets/js/main.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 
@@ -78,58 +79,68 @@
 </html>
 
 <script>
-     const emailtag=  document.getElementById('email')
-     const emailerrror=document.getElementById('usernameError')
+      function validateForm(event) {
+            const email = document.getElementById('email').value.trim()
+            const password = document.getElementById('password').value.trim()
+            const emailPattern =/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const alpha = /[a-zA-Z]/;
+            const digit = /\d/;
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            
+           let valid=true;
 
-     function emailValidate(){
-        const emailvalue=emailtag.value.trim()
-        const emailPattern =/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if(emailvalue === ""){
-            emailerrror.style.display ='block'
-            emailerrror.innerHTML="please Enter value"
+            // Reset error messages
+            
+            emailError.innerText = '';
+             passwordError.innerText = '';
+
+            // Validate email
+            if(!email){
+           emailError.innerText="Email Is Required",
+           valid =false;
+            }else if(!emailPattern.test(email)){
+           emailError.innerText="Invalid Email Format"
+             valid=false;
+            }
+         
+          
+            // Validate password
+            if(!password){
+              passwordError.innerText="Password is Required"
+              valid=false;
+            }else if (password.length < 8) {
+                 passwordError.innerText="Password Must Have Atleast 8 Characters"
+                valid = false;
+            } else if (!alpha.test(password) || !digit.test(password)) {
+                passwordError.innerText = 'Password must contain both letters and numbers';
+                valid = false;
+            }
+
+           if(!valid){
+           event.preventDefault()
+
+           }
+         return valid
+
         }
-        else if(!emailPattern.test(emailvalue)){
-            emailerrror.style.display ='block'
-            emailerrror.innerHTML="please enter a valid email"
-        }
-        else{
-            emailerrror.style.display ='none'
-            emailerrror.innerHTML=""
-        }
-     }
-     emailtag.addEventListener('blur',emailValidate)
-//............................................................
-
-const passwordTag=document.getElementById("password")
-const passwordError=document.getElementById("passwordError")
-
-
-function passwordValidate(){
-
-    const passwordValue=passwordTag.value.trim()
-
-    if(passwordValue=== ""){
-    passwordError.style.display="block"
-    passwordError.innerHTML="Please enter a Password";
-
-
-    }else if(passwordValue.length<8){
-     
-   passwordError.style.display="block"
-   passwordError.innerHTML="pasword should be atleast 8 characters"
-
-
-    }else{
-
-   passwordError.style.display="none";
-   passwordError.innerHTML="";
-
-
-    }
-
-}
-passwordTag.addEventListener('blur',passwordValidate)
-   
     </script>
+
+<script>
+  
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const errMessage = "<%= typeof errMessage !== 'undefined' ? errMessage : '' %>";
+    if (errMessage) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errMessage
+      });
+    }
+  });
+
+
+</script>
+
     </body>
     </html>

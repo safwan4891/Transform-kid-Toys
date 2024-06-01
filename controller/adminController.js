@@ -33,7 +33,7 @@ const login = (req, res) => {
     res.redirect('/admin/home');
 
   } else {
-    res.render('admin/login', { error: "Invalid username or password" });
+    res.render('admin/login', { errMessage: " Password Not Matching" });
   }
 };
 
