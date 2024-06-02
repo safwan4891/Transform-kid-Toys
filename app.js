@@ -13,7 +13,7 @@ app.use(express.static("public"));
 app.use(express.static("views"));
 
 const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGODB);
+mongoose.connect(process.env.MONGOATLAS_STRING||process.env.MONGODB);
 
 mongoose.connection.on("connected", () => {
   console.log("Connected to MongoDB");
