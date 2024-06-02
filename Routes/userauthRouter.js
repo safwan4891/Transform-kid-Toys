@@ -8,7 +8,7 @@ const orderController=require('../controller/orderController')
 const wishlistController=require('../controller/wishlistController')
 const { Session } = require('session')
 
-
+//user login and Register
 router.get('/login',session.is_userlogout,userController.loginload)
 router.post('/login',session.is_userlogout,userController.loguser)
 router.get('/Sign-Up',userController.loadregister)
@@ -17,7 +17,10 @@ router.get('/logout',userController.logoutuser)
 router.get('/',userController.loaduserHome)
 router.get('/useraccount',session.is_userlogin,userController.loaduserAccount)
 router.get('/product-Detail',session.is_userlogin,productController.productDetails)
-
+router.get("/forgotpas",session.is_userlogout,userController.forgetPass)
+router.post("/forgotPassword",session.is_userlogout,userController.forgotPassword)
+router.get("/getResetPassword/:token", session.is_userlogout, userController.getpasswordReset);
+router.post('/resetPassword/:token',session.is_userlogout,userController.resetPassword)
 
 //cart
 router.get('/getcart',session.is_userlogin,userController.cartPage)

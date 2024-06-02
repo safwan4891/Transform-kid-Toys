@@ -13,9 +13,10 @@ const Coupon = require("../model/couponModel")
 const { default: mongoose } = require("mongoose");
 
 const user = require("../model/userModel");
+const session = require("express-session");
 require('dotenv').config()
 
-
+//.............................................!....!!!!!!!........................................
 const loadregister = async (req, res) => {
   try {
     res.render("user/register",{message:null})
@@ -27,7 +28,7 @@ const loadregister = async (req, res) => {
 
 
 
-
+//..................................................................................
 
 const loginload = async function (req, res) {
   try {
@@ -39,7 +40,123 @@ const loginload = async function (req, res) {
   }
 }
 
+//.................................................................................................
 
+const forgetPass=async(req,res)=>{
+  try {
+    res.render("user/forgetPassword")
+  } catch (error) {
+    console.error
+  }
+};
+//..........................................................................................................
+const getpasswordReset=async(req,res)=>{
+  const token=req.params.token
+try {
+  res.render('user/passwordReset',{token})
+} catch (error) {
+  console.error(error)
+}
+  
+}
+
+//............................................................................................................
+const forgotPassword = async (req, res) => {
+  try {
+    const email = req.body.email;
+    req.session.forgotemail = email;
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.MAIL,
+        pass: process.env.PASS,
+      },
+    });
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "Email Not Found" });
+    }
+
+    // Generate a unique token for password reset
+    const token = Math.random().toString(36).substr(2, 8);
+
+    // Update user's resetPasswordToken and resetPasswordExpires in the database
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    await user.save();
+
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: "Reset Password",
+      text: `You are receiving this because you (or someone else) have requested to reset your password.\n\n` +
+        `Please click on the following link, or paste this into your browser to complete the process:\n\n` +
+        `http://${req.headers.host}/getResetPassword/${token}\n\n` +
+        `If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Error Sending Email" });
+      }
+      console.log('Email Sent: ' + info.response);
+      res.status(200).json({ message: "Reset email sent" });
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+//.........................................................................................................
+const resetPassword = async (req, res) => {
+
+  try {
+
+
+    const { token } = req.params;
+    const { password, confirmPassword } = req.body;
+    console.log(req.session.forgotemail, "--------------------------------------------------------------------------------------")
+    if (password !== confirmPassword) {
+        return res.status(400).send({ message: 'Passwords do not match' });
+    }
+  
+      // Find the user by email and check the resetPasswordToken
+      const user = await User.findOne({ email: req.session.forgotemail });
+
+      if (!user) {
+          return res.status(400).send({ message: 'Time limit exeeded resend email' });
+      }
+
+      // Hash the new password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Update user's password and reset resetPasswordToken and resetPasswordExpires
+      user.password = hashedPassword;
+      
+      // Save the user
+      await user.save();
+
+      // Destroy the session
+      req.session.destroy(err => {
+          if (err) {
+              console.error('Error destroying session:', err);
+              return res.status(500).send({ message: 'Internal server error' });
+          }
+          console.log("Session destroyed");
+          res.redirect('/login')
+      });
+
+  } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: 'Server error' });
+  }
+}
+
+//..............................................................................................................
 const loaduserHome = async function (req, res) {
   try {
     const categories = await Category.find({ isListed: true })
@@ -1109,6 +1226,10 @@ module.exports = {
   sortProductsZtoA,
   sortPricesToHigh,
   sortPricesToLow,
-  applyCoupon
+  applyCoupon,
+  forgetPass,
+  getpasswordReset,
+  forgotPassword,
+  resetPassword
 };
 
