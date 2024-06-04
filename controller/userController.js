@@ -113,17 +113,14 @@ const forgotPassword = async (req, res) => {
 
 //.........................................................................................................
 const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password, confirmPassword } = req.body;
+  console.log(req.session.forgotemail, "--------------------------------------------------------------------------------------")
+  if (password !== confirmPassword) {
+      return res.status(400).send({ message: 'Passwords do not match' });
+  }
 
   try {
-
-
-    const { token } = req.params;
-    const { password, confirmPassword } = req.body;
-    console.log(req.session.forgotemail, "--------------------------------------------------------------------------------------")
-    if (password !== confirmPassword) {
-        return res.status(400).send({ message: 'Passwords do not match' });
-    }
-  
       // Find the user by email and check the resetPasswordToken
       const user = await User.findOne({ email: req.session.forgotemail });
 
@@ -155,6 +152,7 @@ const resetPassword = async (req, res) => {
       res.status(500).send({ message: 'Server error' });
   }
 }
+
 
 //..............................................................................................................
 const loaduserHome = async function (req, res) {
