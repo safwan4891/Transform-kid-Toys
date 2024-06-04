@@ -43,8 +43,7 @@ router.post('/editProfile',session.is_userlogin,userController.editProfile)
 router.post('/changePassword',session.is_userlogin,userController.changePasswordPage)
 
 //otp verification route
-router.get('/loadotp',userController.loadotp)
-
+router.get('/loadotp',session.isOtp,userController.loadotp)
 router.get('/getOtp',userController.getOtp)
 router.post('/verifyOtp',userController.verifyOtp)
 router.get('/resendOtp',userController.resendOtp)

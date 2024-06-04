@@ -42,8 +42,23 @@ const isauth = async (req, res, next) => {
 
 
 
+  const isOtp=async(req,res,next)=>{   
+try {
+  if(req.session.isOtp){  
+    next()
+
+  } 
+  else{
+  res.redirect('/Sign-Up')
+
+  } 
+} catch (error) {
+    
+}
+
+  }
 
 
 
 
-module.exports= {is_userlogin,is_userlogout,isauth}
+module.exports= {is_userlogin,is_userlogout,isauth,isOtp}

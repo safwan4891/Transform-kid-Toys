@@ -334,18 +334,25 @@ const getLogout = async (req, res) => {
 
 }
 
-
+//............................................................................................................
 const userList = async (req, res) => {
   try {
-    const users = await User.find()
-
-    res.render('admin/userlist', { users });
+    const page = parseInt(req.query.page) || 1;
+    const searchTerm = req.query.search || "";
+    const limit = 5;
+    const skip = (page - 1) * limit;
+    const regexPattern = new RegExp(searchTerm, "i");
+    const users = await User.find({ name: regexPattern }).skip((page-1)*limit).limit(limit)
+    const count = await User.countDocuments({name:regexPattern});
+    const totalPage = Math.ceil(count / limit);
+    res.render('admin/userlist', { users ,currentPage:page,totalPage:totalPage,searchTerm});
   } catch (error) {
     console.error('Error fetching user list:', error);
     res.status(500).send('Internal Server Error');
   }
 };
 
+//...........................................................................................................
 const userBlock = async (req, res) => {
 
   try {
@@ -540,10 +547,17 @@ const getAddOfferPage = async (req, res) => {
 //...................................................................
 const offerList = async (req, res) => {
   try {
-    
-    const offers = await Offer.find({}).populate('discountedCategory').populate('discountedProduct').sort({ createdAt: -1 });
+    const page=parseInt(req.query.page)||1;
+    const searchTerm=req.query.search||" ";
+    const limit=5;
+    const skip=(page-1)*limit;
+    const regexPattern=new RegExp(searchTerm,"i")
+
+    const offers = await Offer.find({name:regexPattern}).populate('discountedCategory').populate('discountedProduct').sort({ createdAt: -1 }).skip(skip).limit(limit)
+    const count= await Offer.countDocuments({name:regexPattern})
+    const totalPage=Math.ceil(count/limit);
     console.log(offers, "wr")
-    res.render("admin/offerList", { offers })
+    res.render("admin/offerList", { offers,currentPage:page,totalPage:totalPage,searchTerm })
   } catch (error) {
     console.error(error)
     res.status(500).send("Internal Server Error")

@@ -8,7 +8,7 @@ const product = require("../model/productModel");
 const orderId = require('../controller/generateOrderid')
 const Wallet = require('../model/walletModel')
 const Coupon = require("../model/couponModel")
-const RazorPay = require('Razorpay');
+const RazorPay = require('razorpay');
 const crypto = require('crypto');
 const { default: mongoose } = require("mongoose");
 

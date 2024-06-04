@@ -255,7 +255,8 @@ const insertUser = async (req, res) => {
 
 
 
-    req.session.data = userIn;
+    req.session.data = userIn;  
+    req.session.isOtp=userIn.email
     res.redirect('/loadotp');
 
     const transporter = nodemailer.createTransport({
@@ -302,6 +303,7 @@ const insertUser = async (req, res) => {
 
 const loadotp = async (req, res, next) => {
   try {
+    req.session.isOtp=null
     res.render("user/otp")
 
   } catch (error) {
