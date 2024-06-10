@@ -31,6 +31,12 @@
       color: red;
     }
     
+    .disabled-button {
+    pointer-events: none;
+    opacity: 0.5;
+    background-color: #ccc;
+    color: #666;
+}
   </style>
 <body>
     <header class="header-area header-style-1 header-height-2">
@@ -722,8 +728,14 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    <% if (userCart.items.length===0){%>
+                                        <a href="#" class="btn disabled-button"> <i class="fi-rs-box-alt mr-10"></i> Proceed To
+                                            CheckOut</a>
+                                    
+                                    <%}else {%>
                                     <a href="/getCheckout" class="btn "> <i class="fi-rs-box-alt mr-10"></i> Proceed To
                                         CheckOut</a>
+                                    <%}%>
                                 </div>
                             </div>
                         </div>
@@ -948,13 +960,12 @@ document.querySelectorAll('.text-brand').forEach((el)=>{
   }
 }
 
-    
-
-
-
-
 
     </script>
+
+
+
+
 
 
 

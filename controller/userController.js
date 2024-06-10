@@ -512,7 +512,8 @@ const cartPage = async (req, res) => {
     const userCart = await cart.findOne({ userId: user }).populate('items.product')
     console.log(userCart)
     const findWishlist = await Wishlist.findOne({ userId: user }).populate('items.product')
-    res.render('user/cart', { page: userCart, userCart, findWishlist, });
+
+    res.render('user/cart', { page: userCart, userCart, findWishlist});
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");

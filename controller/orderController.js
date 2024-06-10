@@ -30,6 +30,7 @@ const getCheckoutPage = async (req, res) => {
     const userCart = await cart.findOne({ userId: userid }).populate('items.product')
     const coupons = await Coupon.find({ isListed: true })
     console.log(coupons, "couponn");
+    
     res.render("user/checkOut", { userCart, currAddress, coupons })
 
   } catch (error) {

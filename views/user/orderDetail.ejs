@@ -445,14 +445,14 @@
             }
 
             // Adding coupon details to the products array as additional entries
-            if (couponApplied) {
-                products.push({
-                    quantity: 1,
-                    description: "Coupon Applied",
-                    tax: 0,
-                    price: -couponAmount
-                });
-            }
+            // if (couponApplied) {
+            //     products.push({
+            //         quantity: 1,
+            //         description: "Discount",
+            //         tax: 0,
+            //         price: -couponAmount
+            //     });
+            // }
 
             const data = {
                 "apiKey": "free",
@@ -486,7 +486,8 @@
                 "information": {
                     "subTotal": subtotal,
                     "total": grandTotal
-                }
+                },
+
             };
 
             easyinvoice.createInvoice(data, function(result) {
