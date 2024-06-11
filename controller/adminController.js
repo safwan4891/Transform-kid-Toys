@@ -955,7 +955,7 @@ console.log('sales',salesOrders);
    let overallDiscount = 0;
    let totalAmount = 0;
    let netDiscount=0;
-
+   let grandTotal=0;
 
    for (const order of Orders) {
     if (order.couponDetails.offerPrice) {
@@ -967,8 +967,11 @@ console.log('sales',salesOrders);
     }
 
   }
-
-  netDiscount = totalAmount - overallDiscount;
+  for(i=0;i<Orders.length;i++){
+    grandTotal+=Orders[i].totalPrice
+        }
+    
+    netDiscount = grandTotal - overallDiscount;
   const totalPage=Math.ceil(totalCount/limit)
   console.log("salesReport ready  for filter");
 
@@ -998,6 +1001,7 @@ function padZero(num) {
     overallDiscount: overallDiscount,
     totalAmount: totalAmount,
     netDiscount: netDiscount,
+    grandTotal
   
   })
 

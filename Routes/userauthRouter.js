@@ -66,7 +66,7 @@ router.post('/payAgainVerifyPayment',session.is_userlogin,orderController.payAga
 
 //shop
 router.get('/shop',session.is_userlogin,userController.getShopPage)
-router.post('/search',session.is_userlogin,userController.searchProducts)
+router.get('/search',session.is_userlogin,userController.searchProducts)
 router.get('/filterPrice',session.is_userlogin,userController.filterByPrice)
 router.get('/filterCategory',session.is_userlogin,userController.filterByCategory)
 router.get('/sortbyletter',session.is_userlogin,userController.sortProductsAtoZ)

@@ -658,11 +658,11 @@
                     data: { addressId: selectedAddressId, paymentMethod: selectedPayment,total,couponCode},
                     
                     success: (responce) => {
-                    console.log(responce,"response")  
-                        
+                    
+                     
+                    localStorage.setItem('oid', JSON.stringify(responce.orderId));
                         if (responce.payment === 'razorpay') {
-                            console.log(responce)
-
+                            console.log('user-orderid',responce);
                             var options = {
 
                                 "key": "rzp_test_uTqKInGV5tfzfy", // Enter the Key ID generated from the Dashboard
@@ -673,10 +673,6 @@
                                 "image": "/assets/imgs/theme/logo.jpg",
                                 "order_id": responce.data.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
                                 "handler": function (response) {
-                                    alert(response.razorpay_payment_id);
-                                    alert(response.razorpay_order_id);
-                                    alert(response.razorpay_signature)
-                                    alert('verifyPayment')
                                     console.log(responce.data)
                                     verifyPayment(responce.data, response)
                                     window.location.href = ('/placedOrder')
@@ -697,18 +693,9 @@
                             var rzp1 = new Razorpay(options);
                             rzp1.on('payment.failed', function (response) {
                                 paymentFailure(responce.oid)
-                                alert('Payment has been failed');
-                                alert(response.error.code);
-                                alert(response.error.description);
-                                alert(response.error.source);
-                                alert(response.error.step);
-                                alert(response.error.reason);
-                                alert(response.error.metadata.order_id);
-                                alert(response.error.metadata.payment_id);
                                 window.location.href=('/failedOrder')
 
                             });
-
 
                             console.log('kjjbhjdbhjbhj')
                             console.log(document.getElementById('confirmbtn'))

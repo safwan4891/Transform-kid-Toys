@@ -10,7 +10,7 @@ const Wallet = require('../model/walletModel')
 const Coupon = require("../model/couponModel")
 const RazorPay = require('razorpay');
 const crypto = require('crypto');
-const { default: mongoose } = require("mongoose");
+const { default: mongoose, Mongoose } = require("mongoose");
 
 var instance = new RazorPay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -128,7 +128,7 @@ const orderPlaced = async (req, res) => {
       await userCart.save();
 
 
-      res.json({ payment: "cod" })
+      res.json({ payment: "cod"})
     }
     } else if (req.body['paymentMethod'] == 'razorpay') {
       console.log("this is order iddd====>>>", orderID);
@@ -174,7 +174,7 @@ const orderPlaced = async (req, res) => {
 
       const data = await generateRazorPay(orderID, total)
       console.log(data, '=======data')
-      res.json({ payment: 'razorpay', data,oid:orderID})
+      res.json({ payment: 'razorpay', data,oid:orderID,orderId:response._id})
 
     }else if(req.body['paymentMethod']=='Wallet'){
     const user=await User.findById(userId);
@@ -525,8 +525,10 @@ const adminOrderCancel = async (req, res) => {
 const orderDetailPageUser = async (req, res) => {
   try {
     const orderId = req.query.id;
-    const orders = await order.findOne({ _id: orderId }).populate("userId").populate("address").populate("Items.Product").populate("couponDetails.couponId")
-    res.render('user/orderDetail', { order: orders })
+    console.log(orderId)
+    const orderid = new mongoose.Types.ObjectId(orderId)
+    const orders = await order.findOne({ _id: orderid }).populate("userId").populate("address").populate("Items.Product").populate("couponDetails.couponId")
+     res.render('user/orderDetail', { order: orders })
   } catch (error) {
     console.log(error)
   }
