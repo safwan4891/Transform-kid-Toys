@@ -175,16 +175,18 @@
                                                         <%=item.price*item.quantity%>
                                                     <td>
                                                      <% if (order.status==='Delivered' ) { %>
-                                                     <button type="button" class=" btn btn-primary"
-                                                          onclick="confirmReturn('<%= order._id %>','<%= item.Product._id %>','<%= item.price*item.quantity %>')">Return
-                                                        </button>
-                                                           <% } else if (item.status !=='Delivered' && item.status!=='Returned'&& order.status !== 'Payment Failed' ) { %>
-                                                         <% if (item.status !=='Cancelled' && item.status!=='Delivered' ) { %>
-                                                               <button type="button" class="px-9 btn btn-danger"
-                                                                  onclick="handleSelection('<%= order._id %>','<%= item.Product._id %>','<%= item.price*item.quantity %>')">CancelOrder</button>
-                                                         <% } %>
-                                                          
-                                                         <% }else if(order.status === 'Payment Failed') { %>
+                                                        <% if (item.status !== 'Return Processing') { %>
+                                                            <button type="button" class="btn btn-primary"
+                                                                onclick="confirmReturn('<%= order._id %>', '<%= item.Product._id %>', '<%= item.price * item.quantity %>')">Return
+                                                            </button>
+                                                            
+                                                            <% } %>
+                                                        <% } else if (item.status !== 'Delivered' && item.status !== 'Returned' && order.status !== 'Payment Failed') { %>
+                                                            <% if (item.status !== 'Cancelled' && item.status !== 'Delivered') { %>
+                                                                <button type="button" class="px-9 btn btn-danger"
+                                                                    onclick="handleSelection('<%= order._id %>', '<%= item.Product._id %>', '<%= item.price * item.quantity %>')">Cancel Order</button>
+                                                            <% } %>
+                                                        <% } else if (order.status === 'Payment Failed') { %>
                                                             <button type="button" class="btn btn-info" id="payAgainButton">
                                                                 Pay Again
                                                             </button>
@@ -193,44 +195,48 @@
                                                     </td>
 
                                                     <td>
-                                                        <% if(order.status==='Delivered' ){ %>
-                                                            <span class="badge rounded-pill alert-success text-success">
-                                                                <%= order.status %>
-                                                            </span>
-                                                            <% } else if (order.status==='Payment Failed' ) { %>
-                                                                <span
-                                                                    class="badge rounded-pill alert-danger text-danger">
+                                                        <% if (order.status === 'Delivered') { %>
+                                                            <% if (item.status === 'Return Processing') { %>
+                                                                <span class="badge rounded-pill alert-warning text-warning">
+                                                                    <%= item.status %>
+                                                                </span>
+                                                            <% } else { %>
+                                                                <span class="badge rounded-pill alert-success text-success">
                                                                     <%= order.status %>
                                                                 </span>
-
-                                                            <% }else { %>
-                                                                <% if (item.status==='Confirmed' ) { %>
-                                                                    <span
-                                                                        class="badge rounded-pill alert-primary text-primary">
-                                                                        <%= item.status %>
-                                                                    </span>
-                                                                    <% } else if (item.status==='Cancelled' ) { %>
-                                                                        <span
-                                                                            class="badge rounded-pill alert-danger text-danger">
-                                                                            <%= item.status %>
-                                                                        </span>
-                                                                        <% } else if (item.status==='Delivered' ) { %>
-                                                                            <span
-                                                                                class="badge rounded-pill alert-success text-success">
-                                                                                <%= item.status %>
-                                                                            </span>
-                                                                            <% } else if (order.status==='Payment Failed' ) { %>
-                                                                            <span
-                                                                                class="badge rounded-pill alert-danger text-danger">
-                                                                                <%= item.status %>
-                                                                            </span>
-                                                                
-                                                                            <% } else { %>
-                                                                                <span
-                                                                                    class="badge rounded-pill alert-warning text-warning">
-                                                                                    <%= item.status %>
-                                                                                </span>
-                                                                                <% } }%>
+                                                            <% } %>
+                                                        <% } else if (order.status === 'Payment Failed') { %>
+                                                            <span class="badge rounded-pill alert-danger text-danger">
+                                                                <%= order.status %>
+                                                            </span>
+                                                        <% } else { %>
+                                                            <% if (item.status === 'Confirmed') { %>
+                                                                <span class="badge rounded-pill alert-primary text-primary">
+                                                                    <%= item.status %>
+                                                                </span>
+                                                            <% } else if (item.status === 'Cancelled') { %>
+                                                                <span class="badge rounded-pill alert-danger text-danger">
+                                                                    <%= item.status %>
+                                                                </span>
+                                                            <% } else if (item.status === 'Delivered') { %>
+                                                                <span class="badge rounded-pill alert-success text-success">
+                                                                    <%= item.status %>
+                                                                </span>
+                                                            <% } else if (item.status === 'Return Processing') { %>
+                                                                <span class="badge rounded-pill alert-warning text-warning">
+                                                                    <%= item.status %>
+                                                                </span>
+                                                            <% } else if (item.status === 'Returned') { %>
+                                                                <span class="badge rounded-pill alert-success text-success">
+                                                                    <%= item.status %>
+                                                                </span>
+                                                            <% } else { %>
+                                                                <span class="badge rounded-pill alert-warning text-warning">
+                                                                    <%= item.status %>
+                                                                </span>
+                                                            <% } %>
+                                                        <% } %>
+                                                        
                                                     </td>
 
                                                 </tr>
@@ -360,18 +366,18 @@
         function confirmReturn(orderId, productId) {
             Swal.fire({
                 title: 'Are you sure?',
-                text: 'You are about to return this order.',
+                text: 'You are about to request a return for  this order.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, return it!'
+                confirmButtonText: 'Yes, request return !'
             }).then((result) => {
                 if (result.isConfirmed) {
                     fetch('/orderReturned', {
                         method: "PATCH",
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ orderId, productId })
+                        body: JSON.stringify({  orderId, productId, status: 'Return Processing' })
                     })
                         .then(response => {
                             if (!response.ok) {
@@ -381,8 +387,8 @@
                         })
                         .then(data => {
                             Swal.fire({
-                                title: 'Returned!',
-                                text: 'Your order has been returned.',
+                                title: 'Return Requested!',
+                                text: 'Your Return Request is now in Process.',
                                 icon: 'success',
                                 showConfirmButton: false
                             });

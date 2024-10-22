@@ -12,7 +12,14 @@ const walletSchema = new mongoose.Schema({
     default: 0,
 
   },
+
   Transaction: [{
+
+    TransactionId:{
+     type:String,
+    },
+
+    
     Amount: {
       type: Number,
 

@@ -19,6 +19,19 @@
     <link rel="stylesheet" href="assets/css/maind134.css?v=3.4">
 </head>
 
+
+<style>
+
+.discount-badge {
+    background-color:greenyellow; /* Bright Red for visibility */
+    color: rgb(255, 255, 255);
+    padding: 6px 12px; /* Slightly increased padding */
+    border-radius: 5px;
+    font-size: 14px; /* Slightly increased font size */
+    font-weight: bold;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
+}
+</style>
 <body>
     <!-- Quick view -->
     <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
@@ -145,11 +158,11 @@
                         <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
                             <nav>
                                 <ul>
-                                    <li><a class="active" href="index.html">Home <i class="fi-rs-angle-down"></i></a>
+                                    <li><a class="active" href="/">Home <i class="fi-rs-angle-down"></i></a>
                                         
                                     </li>
                                    
-                                    <li><a href="shop-grid-right.html">Shop <i class="fi-rs-angle-down"></i></a>
+                                    <li><a href='/shop'>Shop <i class="fi-rs-angle-down"></i></a>
                                        
                                     </li>
                                     
@@ -208,7 +221,7 @@
                                         </div>
                                         <div class="shopping-cart-button">
                                             <a href="shop-cart.html">View cart</a>
-                                            <a href="shop-checkout.html">Checkout</a>
+                                            <a href="shop-checkout.html">CheckOut</a>
                                         </div>
                                     </div>
                                 </div>
@@ -329,7 +342,6 @@
         <div class="page-header breadcrumb-wrap">
             <div class="container">
                 <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow">Home</a>
                    
                 </div>
             </div>
@@ -381,12 +393,16 @@
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
-                                                <% if (product.offerPrice) { %>
-                                                    <ins><span class="text-brand">&#8377;<%= product.offerPrice %></span></ins>
-                                                    <ins><span class="old-price font-md ml-15">&#8377;<%= product.price %></span></ins>
-                                                    <!-- <span class="save-price  font-md color3 ml-15">25% Off</span> -->
+                                                <% if (product.offerPrice) { 
+                                                    let originalPrice = product.price;
+                                                    let offerPrice = product.offerPrice;
+                                                    let discountPercent = Math.round(((originalPrice - offerPrice) / originalPrice) * 100);
+                                                %>
+                                                    <ins><span class="text-brand">&#8377;<%= offerPrice %></span></ins>
+                                                    <ins><span class="old-price font-md ml-15">&#8377;<%= originalPrice %></span></ins>
+                                                    <span class="discount-badge ">(<%= discountPercent %>% off)</span> <!-- Add discount badge here -->
                                                 <% } else { %>
-                                                    <ins><span class=" text-brand ">&#8377;<%= product.price %></span></ins>
+                                                    <ins><span class="text-brand">&#8377;<%= product.price %></span></ins>
                                                 <% } %>
                                             </div>
                                         </div>

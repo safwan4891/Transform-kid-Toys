@@ -166,7 +166,7 @@
                                 <% order.forEach(order=>{%>
                                 <tr>
                                     <td><%=order.orderid%></td>
-                                    <td><%=order.userId.name%></td>
+                                    <td><%= order.userId ?order.userId.name:'No User'%></td>
                                     <td><%=order.createdAt.toDateString()%></td>
                                     <td><%=order.totalPrice%></td>
                                     <td>
@@ -176,6 +176,8 @@
                                                 <span class="badge rounded-pill alert-danger text-danger"><%= order.status %></span>
                                             <% } else if (order.status === 'Delivered') { %>
                                                 <span class="badge rounded-pill alert-success text-success"><%= order.status %></span>
+                                                <% } else if (order.status === 'Return Processing') { %>
+                                                    <span class="badge rounded-pill alert-warning text-warning"><%= order.status %></span>
                                             <% } else { %>
                                                 <span class="badge rounded-pill alert-secondary text-secondary"><%= order.status %></span>
                                             <%}%>

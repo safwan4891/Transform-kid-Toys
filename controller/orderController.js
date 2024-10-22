@@ -6,6 +6,7 @@ const cart = require('../model/cartModel');
 const order = require("../model/orderModel");
 const product = require("../model/productModel");
 const orderId = require('../controller/generateOrderid')
+ const transId=require('../controller/generateTransId')
 const Wallet = require('../model/walletModel')
 const Coupon = require("../model/couponModel")
 const RazorPay = require('razorpay');
@@ -197,7 +198,8 @@ const orderPlaced = async (req, res) => {
      const walletamount=total
      const wallet=await Wallet.findOne({userId:user._id})
     if(wallet){
-    await Wallet.findOneAndUpdate({userId:user._id},{$push:{Transaction:{Amount:walletamount,createdAt:Date.now(),status:'Debit',remarks:"Product Purchased"}}});
+      const newTransId=transId()
+    await Wallet.findOneAndUpdate({userId:user._id},{$push:{Transaction:{TransactionId:newTransId,Amount:walletamount,createdAt:Date.now(),status:'Debit',remarks:"Product Purchased"}}});
   await wallet.save();
     }
 
@@ -232,7 +234,7 @@ const orderPlaced = async (req, res) => {
      res.json({payment:"Wallet"})
 
     }else{
-      console.log('hellomoonju')
+      
     res.json({nobalance:"InSufficient Wallet Balance"})
     }
     }else{
@@ -487,8 +489,8 @@ const adminOrderCancel = async (req, res) => {
         await findUser.save()
         const wallet = await Wallet.findOne({ userId: findUser._id });
         if (wallet) {
-
-          await Wallet.findOneAndUpdate({ userId: findUser._id }, { $push: { Transaction: { Amount: walletamount, createdAt: Date.now(), status: 'credit', remarks: 'Order Cancelled' } } })
+          const newTransId=transId()
+          await Wallet.findOneAndUpdate({ userId: findUser._id }, { $push: { Transaction: {TransactionId:newTransId, Amount: walletamount, createdAt: Date.now(), status: 'credit', remarks: 'Order Cancelled' } } })
         }
 
         await wallet.save();
@@ -586,8 +588,8 @@ console.log(orderedProduct,"ordered product cancfyhgvgv");
         await findUser.save()
         const wallet = await Wallet.findOne({ userId: findUser._id });
         if (wallet) {
-
-          await Wallet.findOneAndUpdate({ userId: findUser._id }, { $push: { Transaction: { Amount: walletamount, createdAt: Date.now(), status: 'credit', remarks: 'Order Cancelled' } } })
+          const newTransId=transId()
+          await Wallet.findOneAndUpdate({ userId: findUser._id }, { $push: { Transaction: {TransactionId:newTransId, Amount: walletamount, createdAt: Date.now(), status: 'credit', remarks: 'Order Cancelled' } } })
         }
 
         await wallet.save();
@@ -627,79 +629,85 @@ console.log(orderedProduct,"ordered product cancfyhgvgv");
 //..............................................................................................................
 
 const returnOrder = async (req, res) => {
-
   try {
-    const { orderId, productId } = req.body;
-    const user = req.session.user
-    console.log(req.body, "wrg");
-
-    if (!orderId) {
-      return res.status(400).json({ error: "Order not found" });
-    }
-
-    const returnProduct = await Product.findById(productId);
-    console.log(returnProduct, "cnn");
-    if (!returnProduct) {
-      return res.status(404).json({ error: "Product not found in order" });
-    }
+    const { orderId, productId, status } = req.body;
 
     const orderedProduct = await order.findById(orderId);
-
     const productIndex = orderedProduct.Items.findIndex(item => item.Product.toString() === productId);
+
     if (productIndex === -1) {
       return res.status(404).json({ error: "Product not found in order" });
     }
 
+    orderedProduct.Items[productIndex].status = status;
 
-    // Update the product status to 'Returned' and save
-    orderedProduct.Items[productIndex].status = "Returned";
+    await orderedProduct.save();
+    res.status(200).json({ message: "Return request is being processed." });
 
-    // //updating totalPrice after returning one product
-    // orderedProduct.totalPrice -= orderedProduct.Items[productIndex].price * orderedProduct.Items[productIndex].quantity;
-    //refiling wallet amount after returning
-    walletamount = orderedProduct.Items[productIndex].price * orderedProduct.Items[productIndex].quantity;
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
-    if (orderedProduct.status === "Delivered"&&(orderedProduct.payment === "Cod"||orderedProduct.payment==="Wallet") ) {
-      //addind amount to wallet after returning
-      const findUser = await User.findById(orderedProduct.userId)
-      if (findUser) {
-        console.log(findUser.WalletBalance, "jhjhhjjhhdhcvus,")
-        const newWalletbalance = findUser.WalletBalance + walletamount
+//...................................................................................................................
+const approveReturn = async (req, res) => {
+  try {
+    const { orderId, productId } = req.body;
 
-        console.log(findUser, "gggg");
-        findUser.WalletBalance = newWalletbalance
-        await findUser.save()
-        const wallet = await Wallet.findOne({ userId: findUser._id });
-        if (wallet) {
-
-          await Wallet.findOneAndUpdate({ userId: findUser._id }, { $push: { Transaction: { Amount: walletamount, createdAt: Date.now(), status: 'credit', remarks: 'Order Returned' } } })
-        }
-
-        await wallet.save();
-
-      } else {
-        return res.status(400).json({ error: "User Not Found" })
-      }
-
-
-
-
+    const orderedProduct = await order.findById(orderId);
+    if (!orderedProduct || !orderedProduct.Items) {
+      return res.status(404).json({ error: "Order Not Found or has no items" });
     }
 
+    const productIndex = orderedProduct.Items.findIndex(item => item.Product.toString() === productId);
+    if (productIndex === -1) {
+      return res.status(404).json({ error: "Product not found in the order" });
+    }
+
+    if (orderedProduct.Items[productIndex].status !== "Return Processing") {
+      return res.status(400).json({ error: "Return Not Requested" });
+    }
+
+    orderedProduct.Items[productIndex].status = "Returned";
+
+    // Refilling wallet amount after return approval by admin
+    const walletAmount = orderedProduct.Items[productIndex].price * orderedProduct.Items[productIndex].quantity;
+
+    if (orderedProduct.status === "Delivered" && (orderedProduct.payment === "cod" || orderedProduct.payment === "Wallet")) {
+      const user = await User.findById(orderedProduct.userId);
+      if (user) {
+        user.WalletBalance += walletAmount;
+        await user.save();
+
+        const wallet = await Wallet.findOne({ userId: user._id });
+        if (wallet) {
+          const newTransId = transId();
+          wallet.Transaction.push({
+            TransactionId: newTransId,
+            Amount: walletAmount,
+            createdAt: Date.now(),
+            status: 'credit',
+            remarks: 'Order Returned'
+          });
+          await wallet.save();
+        }
+      } else {
+        return res.status(404).json({ error: "User Not Found" });
+      }
+    }
+
+    // Updating product stock
+    const product = await Product.findById(productId);
+    product.Stock += orderedProduct.Items[productIndex].quantity;
+    await product.save();
 
     if (orderedProduct.Items.every(item => item.status === "Returned")) {
       orderedProduct.status = "Returned";
     }
     await orderedProduct.save();
 
-    // Adjust the product stock
-    const product = await Product.findById(productId);
-    product.Stock += orderedProduct.Items[productIndex].quantity;
-    await product.save();
-
-
-    res.status(200).json({ message: "Product Returned successfully", product: orderedProduct.Items[productIndex], });
-
+    res.status(200).json({ message: "Return Approved Successfully", product: orderedProduct.Items[productIndex] });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
@@ -709,9 +717,7 @@ const returnOrder = async (req, res) => {
 
 
 
-
-
-
+//.......................................................................................................................
 const payAgain = async (req,res)=>{
   try {
   const { orderId,receipt,currency,payment_capture} = req.body;  
@@ -762,5 +768,7 @@ module.exports = {
   paymemtFailure,
   adminOrderDelivered,
   payAgain,
-  payAgainVerifyPayment
+  payAgainVerifyPayment,
+  approveReturn
+
 }

@@ -10,6 +10,7 @@ const order = require("../model/orderModel");
 const Wishlist = require('../model/wishlistModel')
 const Wallet = require('../model/walletModel')
 const Coupon = require("../model/couponModel")
+const transId=require('../controller/generateTransId')
 const { default: mongoose } = require("mongoose");
 
 const user = require("../model/userModel");
@@ -405,8 +406,11 @@ const verifyOtp = async (req, res) => {
           if (wallet) {
             await User.findByIdAndUpdate({_id:createduser._id},{$inc:{WalletBalance:50}})
             wallet.walletAmount+=50;
+
+            const newTransId=transId()
+
             await Wallet.findOneAndUpdate({ userId: createduser._id }, { $push: { 
-              Transaction: { Amount: '50', createdAt: Date.now(), status: 'credit', remarks: 'Amount Credited on Registration' } 
+              Transaction: {TransactionId: newTransId, Amount: '50', createdAt: Date.now(), status: 'credit', remarks: 'Amount Credited on Registration' } 
             } })
             
            
@@ -699,34 +703,56 @@ const productRemoveFromCart = async (req, res) => {
   }
 };
 
+//......................................................................................................................
 const userProfile = async (req, res) => {
   try {
-    const userid = req.session.user//checking user entered or not
-    console.log(userid);
-    console.log("working")
-    const userdata = await User.findOne({ _id: userid })
-    const addressData = await Address.find({ userId: userid })
-    console.log("addressdata", addressData);
-    const walletData = await Wallet.find({ userId: userid})
-    
-    walletData.forEach(wallet=>{
-   wallet.Transaction.sort((a,b)=>new Date(b.createdAt)-(a.createdAt))
+    const userid = req.session.user;
+    const ordersPage = parseInt(req.query.page) || 1;
+    const ordersLimit = 5;  // Orders pagination limit
+    const ordersSkip = (ordersPage - 1) * ordersLimit;
 
-    })
-    console.log(walletData,"wallet");
-    let name = userdata.name
-    console.log('name evde', name);
-    let mobile = userdata.mobile
-    const orders = await order.find({userId:userid}).sort({ createdAt: -1 })
-    res.render('user/userProfile', { name, mobile, orders, userAddress: addressData, wallet: userdata.WalletBalance, walletData }) //ividNNU name,email pass cheyyum frontendikku variable name,email
+
+    const walletPage = parseInt(req.query.walletPage) || 1; 
+    const walletLimit = 10;  
+    const walletSkip = (walletPage - 1) * walletLimit;
+
+    const userdata = await User.findOne({ _id: userid });
+    const addressData = await Address.find({ userId: userid });
+    const walletData = await Wallet.find({ userId: userid });
+
+   
+    const walletCount = walletData.reduce((total, wallet) => total + wallet.Transaction.length, 0);
+
+    walletData.forEach(wallet => {
+      wallet.Transaction.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));  
+      wallet.Transaction = wallet.Transaction.slice(walletSkip, walletSkip + walletLimit);  
+    });
+
+    const ordersCount = await order.countDocuments({ userId: userid });
+    const orders = await order.find({ userId: userid })
+                              .sort({ createdAt: -1 })
+                              .skip(ordersSkip)
+                              .limit(ordersLimit);
+
+    res.render('user/userProfile', {
+      name: userdata.name,
+      mobile: userdata.mobile,
+      orders,
+      userAddress: addressData,
+      wallet: userdata.WalletBalance,
+      walletData,
+      currentPage: ordersPage,
+      walletCurrentPage: walletPage,  
+      walletTotalPages: Math.ceil(walletCount / walletLimit),  
+      ordersTotalPages: Math.ceil(ordersCount / ordersLimit)  
+    });
 
   } catch (error) {
-    console.error(error)
-
+    console.error(error);
   }
-
 };
 
+///.....................................................................................................
 const getAddress = async (req, res) => {
   try {
     const userid = req.session.user
@@ -884,7 +910,6 @@ const editProfile = async (req, res) => {
 const changePasswordPage = async (req, res) => {
   try {
     const userid = req.session.user;
-    console.log(userid, "works");
     const oldPassword = req.body.currentPassword;
     const newPassword = req.body.newPassword;
     const confirmPassword = req.body.confirmPassword;
@@ -893,10 +918,10 @@ const changePasswordPage = async (req, res) => {
 
     if (userdetails) {
       const verified = await bcrypt.compare(oldPassword, userdetails.password);
-
-      if (verified && newPassword === confirmPassword) {
-        const secured = await securePassword(newPassword);
-
+         
+       if(verified&&newPassword===confirmPassword){
+         const secured=await securePassword(newPassword)
+        
         if (secured) {
           await User.findOneAndUpdate({ _id: userid }, { $set: { password: secured } });
         }
@@ -941,11 +966,9 @@ const searchProducts = async (req, res) => {
     const user = req.session.user;
     const search = req.query.query || '';
     const category = req.query.id || null;
-    console.log(category,"searchcategory");
     const gt = parseFloat(req.query.gt) || 0;
     const lt = parseFloat(req.query.lt) || Infinity;
-
-    console.log(search, "search query");
+    const sort = req.query.sort || ''; 
 
     const categories = await Category.find({ isListed: true });
 
@@ -971,7 +994,7 @@ const searchProducts = async (req, res) => {
       products = await product.find(productQuery)
     }
 
-    console.log("products", products);
+    const noResultFound=products.length===0;
 
     const currentPage = parseInt(req.query.page) || 1;
     const pageSize = 9;
@@ -985,7 +1008,7 @@ const searchProducts = async (req, res) => {
       hasPreviousPage: currentPage > 1,
     };
 
-    res.render('user/search', { user, categories, pagination, totalPages, products, search, selectedCategory: category, query: req.query });
+    res.render('user/search', { user, categories, pagination, totalPages, products, search, noResultFound,selectedCategory: category, query: req.query });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -1034,7 +1057,7 @@ const filterByCategory = async (req, res) => {
     const gt = parseFloat(req.query.gt) || 0;
     const lt = parseFloat(req.query.lt) || Infinity;
     const searchQuery=req.query.search|| '';
-     console.log(searchQuery,"searrchhh");
+    
     const categories = await Category.find({ isListed: true });
 
   let productQuery={
@@ -1055,7 +1078,8 @@ const filterByCategory = async (req, res) => {
     products = await product.find(productQuery);
   }
 
-    console.log("proucts", products);
+  const noResultFound=products.length===0;
+
     const currentPage = parseInt(req.query.page) || 1;
     const pageSize = 9;
     const totalProducts = await product.countDocuments(productQuery);
@@ -1065,7 +1089,7 @@ const filterByCategory = async (req, res) => {
       hasPreviousPage: currentPage > 1,
     };
 
-    res.render('user/filterShop', { user, categories, pagination, totalPages, products, selectedCategory: category, query: req.query });
+    res.render('user/filterShop', { user, categories, pagination, totalPages, products,noResultFound, selectedCategory: category, query: req.query });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");

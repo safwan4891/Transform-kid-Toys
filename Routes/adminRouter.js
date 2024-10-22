@@ -54,6 +54,7 @@ router.post("/api/unblock-category/:category",islogin,categoryController.getUnbl
  router.get("/orderDetail",islogin,orderController.getOrderDetailPage)
  router.patch("/orderCancelled",islogin,orderController.adminOrderCancel)
 router.patch('/orderDelivered',islogin,orderController.adminOrderDelivered)
+router.patch('/approveReturn',islogin,orderController.approveReturn)
 
 //Coupon Maangement
 router.get("/addCoupon",islogin,adminController.getAddCouponPage)

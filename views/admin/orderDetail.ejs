@@ -243,10 +243,12 @@
                                                         </td>
 
                                                         <td>
-                                                            <% if (order.status !=='Delivered' && item.status!=='Returned' &&item.status=='Confirmed' ) { %>
+                                                            <% if(item.status==="Return Processing"){%>
+                                                               <button type="button" class="btn btn-success"
+                                                               onclick="approveReturn('<%=order._id %>','<%=item.Product._id%>')">Approve Return</button>      
+                                                            <% }else if (order.status !=='Delivered' && item.status!=='Returned' &&item.status=='Confirmed' ) { %>
                                                                 <button type="button" class="px-9 btn btn-danger"
-                                                                    onclick="handleSelections('<%= order._id %>','<%= item.Product._id %>','<%=item.price*item.quantity%>')">Cancel
-                                                                    Order</button>
+                                                                    onclick="handleSelections('<%= order._id %>','<%= item.Product._id %>','<%=item.price*item.quantity%>')">Cancel Order</button>
                                                                 <% } %>
 
 
@@ -328,6 +330,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
 
+///........................................................................................................................
         //cancel Order
 
         function handleSelections(orderId, productId) {
@@ -375,7 +378,7 @@
 
         }
 
-
+//................................................................................................................
 
         //deliver order
         function handleSelection(orderId,) {
@@ -422,6 +425,57 @@
             });
 
         }
+
+
+        //...............................................................................................................
+
+        //Approval of returning order
+
+        function approveReturn(orderId, productId) {
+    Swal.fire({
+        title: "Are You Sure?",
+        text: "You are about to approve the Return for this product.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: "Yes, Approve It!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch("/admin/approveReturn", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ orderId, productId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Something went wrong!");
+                }
+                return response.json();
+            })
+            .then(data => {
+                Swal.fire({
+                    title: 'Return Approved!',
+                    text: 'The return request has been approved.',
+                    icon: 'success',
+                    showConfirmButton: false
+                });
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops..!",
+                    text: error.message || "Something went wrong!"
+                });
+            });
+        }
+    });
+}
+
+
     </script>
 
 </body>
